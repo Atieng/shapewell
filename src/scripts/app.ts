@@ -2,8 +2,8 @@
 
 import { bindSignals } from './signals';
 import { engine, onProfileChange, startScoring } from './profiles';
-import { applyShape, currentShape, renumber } from './reshape';
-import { initStudio, pageStudio, onShapeChanged, openStudio, closeStudio } from './studio';
+import { applyShape, currentShape } from './reshape';
+import { initPanel, pagePanel, onShapeChanged, closePanel } from './panel';
 import { initUiOnce, initUiPage } from './ui';
 import {
   initLenis,
@@ -24,21 +24,15 @@ onProfileChange((next, prev) => onShapeChanged(next, prev, engine.source));
 function onPageLoad() {
   initLenis();
   initUiOnce();
-  initStudio();
+  initPanel();
   startScoring();
 
   bindSignals();
   initUiPage();
-  pageStudio();
+  pagePanel();
 
   // the new page starts in whatever shape the visitor is in, without animation
   if (currentShape() !== 'default') applyShape(currentShape(), { animate: false });
-  else renumber();
-
-  if (document.body.dataset.studioDocked !== undefined && matchMedia('(min-width: 1100px)').matches) {
-    document.documentElement.classList.add('studio-docked');
-    openStudio();
-  }
 
   heroIntro();
   if (firstLoad) drawSwoosh();
@@ -52,7 +46,7 @@ function onPageLoad() {
 
 document.addEventListener('astro:page-load', onPageLoad);
 document.addEventListener('astro:before-swap', () => {
-  closeStudio();
+  closePanel();
   killScrollTriggers();
 });
 document.addEventListener('astro:after-swap', () => {

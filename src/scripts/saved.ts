@@ -51,7 +51,7 @@ function write(list: Entry[]) {
   } catch {
     storageOk = false;
   }
-  document.dispatchEvent(new CustomEvent('shapewell:library'));
+  document.dispatchEvent(new CustomEvent('shapewell:saved'));
 }
 
 export const list = () => read().sort((a, b) => b.date.localeCompare(a.date));

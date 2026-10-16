@@ -1,9 +1,7 @@
-// Small page widgets: nav, mobile menu, billing toggle, copy buttons, read more, forms.
+// Small page widgets: nav, mobile menu, copy buttons, read more, forms.
 
-import { gsap } from 'gsap';
-import { noteBillingToggle } from './signals';
 import { runCta } from './reshape';
-import { reducedMotion, scrollToEl } from './motion';
+import { scrollToEl } from './motion';
 
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll<T>(sel)];
 
@@ -24,7 +22,7 @@ export function initUiOnce() {
     }
     const menu = t.closest<HTMLElement>('[data-menu-toggle]');
     if (menu) toggleMenu();
-    else if (t.closest('[data-mobile-menu] a')) toggleMenu(false);
+    else if (t.closest('[data-mobile-menu] a, [data-mobile-menu] button')) toggleMenu(false);
 
     const copy = t.closest<HTMLButtonElement>('[data-copy]');
     if (copy) copyFrom(copy);
@@ -35,9 +33,6 @@ export function initUiOnce() {
       box?.classList.add('is-open');
       more.setAttribute('aria-expanded', 'true');
     }
-
-    const tab = t.closest<HTMLButtonElement>('[data-install-tab]');
-    if (tab) selectTab(tab);
   });
 }
 
@@ -67,69 +62,6 @@ async function copyFrom(btn: HTMLButtonElement) {
   setTimeout(() => label && (label.textContent = 'Copy'), 2000);
 }
 
-function selectTab(tab: HTMLButtonElement) {
-  const list = tab.closest('[role="tablist"]');
-  if (!list) return;
-  $$<HTMLButtonElement>('[role="tab"]', list).forEach((t) => {
-    const on = t === tab;
-    t.setAttribute('aria-selected', String(on));
-    t.tabIndex = on ? 0 : -1;
-    const panel = document.getElementById(t.getAttribute('aria-controls') || '');
-    if (panel) panel.hidden = !on;
-    const copy = list.parentElement?.querySelector<HTMLElement>('[data-copy]');
-    const code = panel?.querySelector('code');
-    if (on && copy && code) copy.dataset.copy = code.id;
-  });
-}
-
-function bindTabsKeys() {
-  $$('[role="tablist"]').forEach((list) => {
-    list.addEventListener('keydown', (e) => {
-      const ev = e as KeyboardEvent;
-      if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
-      const tabs = $$<HTMLButtonElement>('[role="tab"]', list);
-      const i = tabs.indexOf(document.activeElement as HTMLButtonElement);
-      const next = tabs[(i + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      next.focus();
-      selectTab(next);
-    });
-  });
-}
-
-function bindBilling() {
-  $$<HTMLElement>('[data-billing]').forEach((group) => {
-    const buttons = $$<HTMLButtonElement>('[data-period]', group);
-    buttons.forEach((b) =>
-      b.addEventListener('click', () => {
-        const period = b.dataset.period!;
-        if (b.getAttribute('aria-pressed') === 'true') return;
-        buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-        noteBillingToggle();
-        $$<HTMLElement>('[data-price]').forEach((p) => animatePrice(p, Number(p.dataset[period])));
-        $$<HTMLElement>('[data-per]').forEach((p) => (p.textContent = p.dataset[period] || ''));
-      }),
-    );
-  });
-}
-
-const money = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
-
-function animatePrice(el: HTMLElement, to: number) {
-  const from = Number(el.textContent?.replace(/[^\d.]/g, '')) || 0;
-  if (reducedMotion() || from === to) {
-    el.textContent = money(to);
-    return;
-  }
-  const o = { v: from };
-  gsap.to(o, {
-    v: to,
-    duration: 0.6,
-    ease: 'power2.out',
-    onUpdate: () => (el.textContent = `$${Math.round(o.v)}`),
-    onComplete: () => (el.textContent = money(to)),
-  });
-}
-
 function bindEarlyAccess() {
   $$<HTMLFormElement>('[data-early-access]').forEach((form) => {
     form.addEventListener('submit', (e) => {
@@ -155,7 +87,5 @@ function bindEarlyAccess() {
 export function initUiPage() {
   navState();
   toggleMenu(false);
-  bindTabsKeys();
-  bindBilling();
   bindEarlyAccess();
 }

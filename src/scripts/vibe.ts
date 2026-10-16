@@ -27,7 +27,7 @@ const RULES: Record<Variant['id'], Variant> = {
     id: 'buyer',
     name: 'Buyer variant',
     rule: {
-      when: 'Visitor rests on pricing, flips the billing toggle or jumps to pricing',
+      when: 'Visitor rests on pricing or clicks it',
       show: SHAPES.buyer.layout.join(' '),
       copy: SHAPES.buyer.sub,
       button: SHAPES.buyer.cta,
@@ -37,7 +37,7 @@ const RULES: Record<Variant['id'], Variant> = {
     id: 'builder',
     name: 'Builder variant',
     rule: {
-      when: 'Visitor rests on code, clicks the install tab or scrolls fast',
+      when: 'Visitor rests on code, copies the snippet or skims fast',
       show: SHAPES.builder.layout.join(' '),
       copy: SHAPES.builder.sub,
       button: SHAPES.builder.cta,
@@ -47,7 +47,7 @@ const RULES: Record<Variant['id'], Variant> = {
     id: 'researcher',
     name: 'Researcher variant',
     rule: {
-      when: 'Visitor scrolls slowly and lingers on explanations, FAQ or limits',
+      when: 'Visitor scrolls slowly and lingers on explanations',
       show: SHAPES.researcher.layout.join(' '),
       copy: SHAPES.researcher.sub,
       button: SHAPES.researcher.cta,
@@ -66,7 +66,7 @@ const RULES: Record<Variant['id'], Variant> = {
 };
 
 export const EXAMPLES = [
-  'For people who look at pricing, show the price first, shorten the hero and make the button say Start free.',
+  'For people who look at pricing, put pricing first and make the button say Join early access.',
   'When a developer is reading, put the install code first and keep the copy short.',
   'For careful readers, explain how it works and what happens to their privacy.',
   'On a phone, keep the hero short and pin the main button to the bottom.',

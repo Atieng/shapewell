@@ -32,7 +32,7 @@ export type Scores = Record<Profile, number>;
 export interface EngineState {
   profile: Active;
   scores: Scores;
-  /** 'auto' when scoring chose it, 'replay' when forced from the studio, 'variant' for a vibe variant */
+  /** 'auto' when scoring chose it, 'replay' when forced from the panel, 'variant' for a vibe variant */
   source: 'auto' | 'replay' | 'variant';
   lockedUntil: number;
   paused: boolean;
@@ -62,29 +62,27 @@ const s1 = (ms: number) => (ms / 1000).toFixed(1);
 export function evidence(p: Profile): Reason[] {
   const out: Reason[] = [];
   const add = (weight: number, text: string) => weight > 0 && out.push({ weight, text });
+  const times = (n: number) => `${n} time${n === 1 ? '' : 's'}`;
   if (p === 'builder') {
     const h = liveHover('code');
-    add(h / 1000, `You rested on the code block for ${s1(h)} s, so install moved up.`);
-    add(signals.clicks.code * 2, `You clicked in the install section ${signals.clicks.code} time${signals.clicks.code === 1 ? '' : 's'}.`);
-    add(signals.installTabs * 2, `You used the copy button or install tab ${signals.installTabs} time${signals.installTabs === 1 ? '' : 's'}.`);
+    add(h / 1000, `You rested on the code for ${s1(h)} s, so the Click column moved to the front.`);
+    add(signals.clicks.code * 2, `You clicked on the code ${times(signals.clicks.code)}.`);
+    add(signals.copies * 2, `You used a copy button ${times(signals.copies)}.`);
     if (signals.scrollSpeed > FAST_SCROLL)
-      add(Math.min(4, (signals.scrollSpeed - FAST_SCROLL) / 400), `You scroll fast (about ${Math.round(signals.scrollSpeed)} px/s), so long paragraphs were shortened.`);
-    add(signals.dwell.code / 1000 * 0.3, `The install section was in view for ${s1(signals.dwell.code)} s.`);
+      add(Math.min(4, (signals.scrollSpeed - FAST_SCROLL) / 400), `You skim fast (about ${Math.round(signals.scrollSpeed)} px/s), so long paragraphs were shortened.`);
+    add(signals.dwell.code / 1000 * 0.3, `The code was in view for ${s1(signals.dwell.code)} s.`);
   }
   if (p === 'buyer') {
     const h = liveHover('pricing');
-    add(h / 1000, `You rested on pricing for ${s1(h)} s, so plans moved up.`);
-    add(signals.billingToggles * 2.5, `You flipped the monthly/yearly toggle ${signals.billingToggles} time${signals.billingToggles === 1 ? '' : 's'}.`);
-    add(signals.jumpedToPricing * 3, `You jumped straight to pricing from a link.`);
-    add(signals.clicks.pricing * 1.5, `You clicked in the pricing section ${signals.clicks.pricing} time${signals.clicks.pricing === 1 ? '' : 's'}.`);
+    add(h / 1000, `You rested on pricing for ${s1(h)} s, so the Hover column moved to the front.`);
+    add(signals.clicks.pricing * 1.5, `You clicked on pricing ${times(signals.clicks.pricing)}.`);
     add(signals.dwell.pricing / 1000 * 0.3, `Pricing was in view for ${s1(signals.dwell.pricing)} s.`);
   }
   if (p === 'researcher') {
-    const reading = signals.dwell.explain + signals.dwell.faq + signals.dwell.limits;
-    add(reading / 1000 * 0.25, `You spent ${s1(reading)} s on explanations, the FAQ and honest limits.`);
-    const h = liveHover('explain') + liveHover('faq') + liveHover('limits');
+    add(signals.dwell.explain / 1000 * 0.25, `You spent ${s1(signals.dwell.explain)} s on the explanations.`);
+    const h = liveHover('explain');
     add(h / 1000, `You rested on explanatory text for ${s1(h)} s.`);
-    add((signals.clicks.faq + signals.clicks.limits + signals.clicks.explain) * 1.5, `You opened or clicked ${signals.clicks.faq + signals.clicks.limits + signals.clicks.explain} explanation or FAQ item${signals.clicks.faq + signals.clicks.limits + signals.clicks.explain === 1 ? '' : 's'}.`);
+    add(signals.clicks.explain * 1.5, `You clicked in the explanations ${times(signals.clicks.explain)}.`);
     if (signals.scrollSpeed > 0 && signals.scrollSpeed < SLOW_SCROLL && elapsed() > WARMUP)
       add(Math.min(3, elapsed() / 20000), `You scroll slowly (about ${Math.round(signals.scrollSpeed)} px/s), so the reading column widened.`);
   }

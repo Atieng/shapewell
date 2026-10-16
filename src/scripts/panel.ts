@@ -1,10 +1,10 @@
-// The studio drawer, the live meters, the toast and the vibe-variant boxes.
+// The "Why this page changed" panel, the live meters, the toast, saved items and the vibe-variant boxes.
 
 import { signals, liveHover, elapsed, summarise, resetSignals } from './signals';
 import { engine, evidence, setProfile, setPaused, resetEngine, PROFILES, PROFILE_NAMES, type Profile } from './profiles';
 import { SHAPES, applyShape, currentShape, type Shape } from './reshape';
 import { match, type Variant } from './vibe';
-import { saveRun, saveVariant, storageAvailable } from './library';
+import { saveRun, saveVariant, storageAvailable, list as savedList, remove as removeSaved, download, type Entry } from './saved';
 import { stopScroll } from './motion';
 
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
@@ -21,15 +21,10 @@ function meterRows() {
   return [
     { key: 'speed', label: 'Scroll speed', value: `${Math.round(signals.scrollSpeed)} px/s`, ratio: signals.scrollSpeed / 3000 },
     { key: 'depth', label: 'Deepest point', value: `${Math.round(signals.maxDepth * 100)} %`, ratio: signals.maxDepth },
-    { key: 'code', label: 'Code: hover / in view', value: `${s1(liveHover('code'))} / ${s1(signals.dwell.code)}`, ratio: (liveHover('code') + signals.dwell.code * 0.3) / 15000 },
     { key: 'pricing', label: 'Pricing: hover / in view', value: `${s1(liveHover('pricing'))} / ${s1(signals.dwell.pricing)}`, ratio: (liveHover('pricing') + signals.dwell.pricing * 0.3) / 15000 },
-    {
-      key: 'reading',
-      label: 'Explain, FAQ, limits in view',
-      value: s1(signals.dwell.explain + signals.dwell.faq + signals.dwell.limits),
-      ratio: (signals.dwell.explain + signals.dwell.faq + signals.dwell.limits) / 60000,
-    },
-    { key: 'toggle', label: 'Billing toggle', value: `${signals.billingToggles}x`, ratio: signals.billingToggles / 4 },
+    { key: 'code', label: 'Code: hover / in view', value: `${s1(liveHover('code'))} / ${s1(signals.dwell.code)}`, ratio: (liveHover('code') + signals.dwell.code * 0.3) / 15000 },
+    { key: 'reading', label: 'Explanations in view', value: s1(signals.dwell.explain), ratio: signals.dwell.explain / 60000 },
+    { key: 'clicks', label: 'Clicks and copies', value: `${signals.clicks.code + signals.clicks.pricing + signals.clicks.explain + signals.copies}`, ratio: (signals.clicks.code + signals.clicks.pricing + signals.clicks.explain + signals.copies) / 8 },
     { key: 'device', label: 'Device', value: signals.coarse ? 'Touch' : 'Mouse or trackpad', ratio: -1 },
   ];
 }
@@ -95,7 +90,7 @@ export function reasons(): string[] {
   const s = currentShape();
   const out: string[] = [];
   if (engine.source === 'replay' && s !== 'default') {
-    out.push(`You chose "Replay as ${PROFILE_NAMES[s as Profile]}" in the studio, so the page shows that shape until you reset.`);
+    out.push(`You chose "Replay as ${PROFILE_NAMES[s as Profile]}" so the page shows that shape until you reset.`);
   } else if (engine.source === 'variant') {
     out.push(`You previewed the ${lastVariant?.name ?? 'variant'}${lastPrompt ? ` from "${lastPrompt}"` : ''}.`);
   } else if (s === 'default') {
@@ -141,47 +136,46 @@ function renderAll() {
   $$('[data-privacy-note]').forEach((n) => (n.hidden = !engine.privacySignal));
 }
 
-/* ---------- Drawer ---------- */
+/* ---------- Panel ---------- */
 
 let lastFocus: HTMLElement | null = null;
-const studio = () => $('#studio');
-const isDocked = () => document.documentElement.classList.contains('studio-docked');
+const panel = () => $('#why-panel');
+const isOpen = () => !!panel()?.classList.contains('is-open');
 
-export function openStudio() {
-  const el = studio();
-  if (!el || el.classList.contains('is-open')) return;
+export function openPanel() {
+  const el = panel();
+  if (!el || isOpen()) return;
   lastFocus = document.activeElement as HTMLElement;
   el.hidden = false;
   requestAnimationFrame(() => el.classList.add('is-open'));
-  el.setAttribute('aria-modal', String(!isDocked()));
-  if (!isDocked()) {
-    $('#studio-backdrop')!.hidden = false;
-    stopScroll(true);
-    document.documentElement.classList.add('studio-lock');
-  }
-  $$('[data-open-studio]').forEach((b) => b.setAttribute('aria-expanded', 'true'));
+  $('#why-backdrop')!.hidden = false;
+  stopScroll(true);
+  document.documentElement.classList.add('panel-lock');
+  $$('[data-open-why]').forEach((b) => b.setAttribute('aria-expanded', 'true'));
   renderAll();
-  if (!isDocked()) setTimeout(() => $<HTMLElement>('[data-close-studio]', el)?.focus(), 50);
+  renderSaved();
+  setTimeout(() => $<HTMLElement>('[data-close-why]', el)?.focus(), 50);
 }
 
-export function closeStudio() {
-  const el = studio();
-  if (!el || !el.classList.contains('is-open')) return;
+export function closePanel() {
+  const el = panel();
+  if (!el || !isOpen()) return;
   el.classList.remove('is-open');
-  $('#studio-backdrop')!.hidden = true;
+  $('#why-backdrop')!.hidden = true;
   stopScroll(false);
-  document.documentElement.classList.remove('studio-lock', 'studio-docked');
-  $$('[data-open-studio]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+  document.documentElement.classList.remove('panel-lock');
+  $$('[data-open-why]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
   setTimeout(() => {
     if (!el.classList.contains('is-open')) el.hidden = true;
   }, 400);
-  const back = lastFocus && lastFocus !== document.body && !el.contains(lastFocus) ? lastFocus : $('[data-open-studio]');
+  const visible = (n: HTMLElement | null) => !!n && n !== document.body && !el.contains(n) && n.offsetParent !== null;
+  const back = visible(lastFocus) ? lastFocus : $$('[data-open-why], [data-menu-toggle]').find(visible);
   back?.focus?.();
 }
 
 function trapFocus(e: KeyboardEvent) {
-  const el = studio();
-  if (!el?.classList.contains('is-open') || isDocked() || e.key !== 'Tab') return;
+  const el = panel();
+  if (!el || !isOpen() || e.key !== 'Tab') return;
   const items = $$<HTMLElement>(
     'a[href], button:not([disabled]), input:not([disabled]), textarea, [tabindex]:not([tabindex="-1"])',
     el,
@@ -202,18 +196,54 @@ function trapFocus(e: KeyboardEvent) {
 }
 
 function onKey(e: KeyboardEvent) {
-  const t = e.target as HTMLElement;
-  const typing = t.closest('input, textarea, select, [contenteditable="true"]');
   if (e.key === 'Escape') {
-    if (studio()?.classList.contains('is-open')) closeStudio();
+    if (isOpen()) closePanel();
     return;
   }
-  if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'k' || e.key === 'K')) {
-    e.preventDefault();
-    if (studio()?.classList.contains('is-open')) closeStudio();
-    else openStudio();
-  }
   trapFocus(e);
+}
+
+/* ---------- Saved ---------- */
+
+const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+function entryTitle(e: Entry) {
+  const name = e.profile === 'mobile' ? 'Mobile-short' : PROFILE_NAMES[e.profile as Profile | 'default'];
+  return e.kind === 'run' ? `Run: ${name} shape` : `Variant: ${name}`;
+}
+
+function entryDetail(e: Entry) {
+  return e.kind === 'run' ? e.reasons[0] ?? '' : `"${e.prompt}"`;
+}
+
+function renderSaved() {
+  const root = $('[data-saved-list]');
+  if (!root) return;
+  const items = savedList();
+  $$('[data-saved-empty]').forEach((n) => (n.hidden = items.length > 0));
+  $$<HTMLButtonElement>('[data-saved-all]').forEach((b) => (b.hidden = items.length === 0));
+  root.innerHTML = items
+    .map(
+      (e) => `<li class="saved-item">
+        <div class="saved-text">
+          <p class="saved-title">${escapeHtml(entryTitle(e))}</p>
+          <p class="saved-meta mono">${escapeHtml(dateFmt.format(new Date(e.date)))}</p>
+          <p class="saved-detail">${escapeHtml(entryDetail(e))}</p>
+        </div>
+        <div class="saved-actions">
+          <button type="button" class="btn btn-sm" data-saved-download="${e.id}" aria-label="Download ${escapeHtml(entryTitle(e))} as JSON">Download JSON</button>
+          <button type="button" class="btn btn-sm btn-ghost" data-saved-delete="${e.id}" aria-label="Delete ${escapeHtml(entryTitle(e))}">Delete</button>
+        </div>
+      </li>`,
+    )
+    .join('');
+}
+
+function deleteSaved(id: string) {
+  const gone = removeSaved(id);
+  if (gone) flash('[data-saved-status]', `Deleted "${entryTitle(gone)}".`);
+  const next = $<HTMLElement>('[data-saved-delete]') ?? $<HTMLElement>('[data-save-run]');
+  next?.focus();
 }
 
 /* ---------- Toast ---------- */
@@ -270,7 +300,7 @@ function saveThisRun() {
   });
   flash(
     '[data-save-status]',
-    storageAvailable() ? 'Saved to your library on this device.' : 'Saved for this visit only. Your browser blocks storage.',
+    storageAvailable() ? 'Saved under "Saved" below, on this device only.' : 'Saved for this visit only. Your browser blocks storage.',
   );
 }
 
@@ -323,13 +353,13 @@ function bindVibe(box: HTMLElement) {
     if (!matched) return;
     lastVariant = matched;
     setProfile(matched.id, 'variant');
-    toast(`Previewing the ${matched.name}. Reset in the studio to go back.`, true);
+    toast(`Previewing the ${matched.name}. Use Reset in "See why it changed" to go back.`, true);
   });
   $('[data-vibe-save]', box)?.addEventListener('click', () => {
     if (!matched) return;
     saveVariant({ profile: matched.id, prompt: lastPrompt, rule: matched.rule });
     $('[data-vibe-saved]', box)!.textContent = storageAvailable()
-      ? 'Variant saved to your library.'
+      ? 'Variant saved. Find it under "Saved" in "See why it changed".'
       : 'Saved for this visit only. Your browser blocks storage.';
   });
 }
@@ -339,20 +369,20 @@ function bindVibe(box: HTMLElement) {
 let wired = false;
 
 /** Global listeners, once per visit. */
-export function initStudio() {
+export function initPanel() {
   if (wired) return;
   wired = true;
   document.addEventListener('keydown', onKey);
   document.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
-    if (t.closest('[data-open-studio]')) {
+    if (t.closest('[data-open-why]')) {
       e.preventDefault();
-      openStudio();
-    } else if (t.closest('[data-close-studio]') || t.closest('#studio-backdrop')) {
-      closeStudio();
+      openPanel();
+    } else if (t.closest('[data-close-why]') || t.closest('#why-backdrop')) {
+      closePanel();
     } else if (t.closest('[data-toast-why]')) {
       hideToast();
-      openStudio();
+      openPanel();
     } else if (t.closest('[data-toast-close]')) {
       hideToast();
     } else if (t.closest('[data-replay]')) {
@@ -364,19 +394,28 @@ export function initStudio() {
       renderAll();
     } else if (t.closest('[data-save-run]')) {
       saveThisRun();
+    } else if (t.closest('[data-saved-delete]')) {
+      deleteSaved(t.closest<HTMLElement>('[data-saved-delete]')!.dataset.savedDelete!);
+    } else if (t.closest('[data-saved-download]')) {
+      const id = t.closest<HTMLElement>('[data-saved-download]')!.dataset.savedDownload;
+      const entry = savedList().find((x) => x.id === id);
+      if (entry) download([entry], `shapewell-${entry.kind}-${entry.id}.json`);
+    } else if (t.closest('[data-saved-all]')) {
+      download();
     }
   });
-  document.addEventListener('shapewell:open-studio', openStudio);
+  document.addEventListener('shapewell:open-why', openPanel);
+  document.addEventListener('shapewell:saved', renderSaved);
   document.addEventListener('shapewell:toast', (e) => toast((e as CustomEvent).detail.text));
   document.addEventListener('shapewell:scores', renderAll);
   document.addEventListener('shapewell:shape', () => renderAll());
   window.setInterval(() => {
-    if (studio()?.classList.contains('is-open') || $('[data-meters]')) renderAll();
+    if (isOpen() || $('[data-meters]')) renderAll();
   }, 500);
 }
 
 /** Per page: bind the boxes on this page and apply the current shape. */
-export function pageStudio() {
+export function pagePanel() {
   $$('[data-vibe]').forEach(bindVibe);
   renderAll();
 }

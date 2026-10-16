@@ -2,30 +2,15 @@
 import { Icon } from 'astro-icon/components';
 import Logo from './Logo.astro';
 
-const home = Astro.url.pathname === '/';
-const h = (id: string) => (home ? `#${id}` : `/#${id}`);
-const links = [
-  { href: h('how'), label: 'How it works' },
-  { href: h('use-cases'), label: 'Use cases' },
-  { href: h('pricing'), label: 'Pricing' },
-  { href: h('faq'), label: 'FAQ' },
-  { href: h('founder'), label: 'Founder' },
-  { href: '/library', label: 'Your experiments' },
-];
+const join = Astro.url.pathname === '/' ? '#early-access' : '/#early-access';
 ---
 
 <header class="nav" data-nav>
   <div class="container nav-inner">
     <Logo size={32} />
-    <nav class="nav-links" aria-label="Main">
-      <ul>
-        {links.map((l) => <li><a href={l.href} aria-current={Astro.url.pathname === l.href ? 'page' : undefined}>{l.label}</a></li>)}
-      </ul>
-    </nav>
     <div class="nav-actions">
-      <button type="button" class="btn btn-primary btn-sm" data-open-studio aria-controls="studio" aria-expanded="false" aria-keyshortcuts="K">
-        <span><span class="hide-sm">Open </span><span class="cap-sm">studio</span></span> <span class="kbd" aria-hidden="true">K</span>
-      </button>
+      <button type="button" class="btn btn-sm hide-mobile" data-open-why aria-controls="why-panel" aria-expanded="false">See why it changed</button>
+      <a class="btn btn-primary btn-sm hide-mobile" href={join}>Join early access</a>
       <button type="button" class="menu-btn" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu">
         <Icon name="lucide:menu" class="i-open" aria-hidden="true" />
         <Icon name="lucide:x" class="i-close" aria-hidden="true" />
@@ -36,7 +21,8 @@ const links = [
   <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
     <nav class="container" aria-label="Mobile">
       <ul>
-        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        <li><button type="button" data-open-why aria-controls="why-panel" aria-expanded="false">See why it changed</button></li>
+        <li><a href={join}>Join early access</a></li>
       </ul>
     </nav>
   </div>
@@ -65,25 +51,6 @@ const links = [
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-  }
-  .nav-links ul {
-    display: flex;
-    gap: 26px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .nav-links a {
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--graphite);
-    padding: 6px 0;
-    border-bottom: 1px solid transparent;
-  }
-  .nav-links a:hover,
-  .nav-links a[aria-current='page'] {
-    border-bottom-color: var(--cobalt);
   }
   .nav-actions {
     display: flex;
@@ -121,37 +88,30 @@ const links = [
     margin: 0;
     padding: 8px 0 16px;
   }
-  .mobile-menu a {
+  .mobile-menu a,
+  .mobile-menu button {
     display: block;
+    width: 100%;
     padding: 12px 0;
+    background: none;
+    border: 0;
     border-bottom: 1px solid var(--hairline);
+    text-align: left;
     text-decoration: none;
+    font: inherit;
     font-weight: 500;
+    color: var(--graphite);
+    cursor: pointer;
   }
-  @media (max-width: 1020px) {
-    .nav-links {
+  @media (max-width: 640px) {
+    .hide-mobile {
       display: none;
     }
     .menu-btn {
       display: inline-flex;
     }
   }
-  @media (max-width: 480px) {
-    .nav-actions .btn .kbd {
-      display: none;
-    }
-    .nav-actions .btn {
-      padding-inline: 14px;
-      white-space: nowrap;
-    }
-    .hide-sm {
-      display: none;
-    }
-    .cap-sm {
-      text-transform: capitalize;
-    }
-  }
-  @media (min-width: 1021px) {
+  @media (min-width: 641px) {
     .mobile-menu {
       display: none;
     }

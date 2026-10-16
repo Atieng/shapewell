@@ -1,0 +1,229 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHead from '../SectionHead.astro';
+import { SHAPES } from '../../scripts/reshape';
+
+const snippet = `<script src="https://cdn.shapewell.dev/v1.js" defer\n  data-site="your-site-id"></script>`;
+---
+
+<section class="section" id="signals" aria-labelledby="signals-title">
+  <div class="container">
+    <SectionHead n={3} name="Hover. Scroll. Click." />
+    <h2 id="signals-title" class="h-section">Every signal <span class="accent">changes something you can see.</span></h2>
+    <div class="collapsible long intro" data-signal="explain">
+      <p class="clip">
+        Shapewell turns three kinds of real-time behaviour into three kinds of change: the layout, the copy and the main
+        button. Try each column below, then open "See why it changed" to read what happened.
+      </p>
+      <button type="button" class="more-btn" aria-expanded="false">Read more</button>
+    </div>
+
+    <div class="cols" data-reorder>
+      <article class="col card" data-key="hover" data-order="1" data-first-for="buyer" data-signal="pricing" aria-labelledby="col-hover">
+        <header class="col-head">
+          <Icon name="lucide:mouse-pointer-2" aria-hidden="true" />
+          <h3 id="col-hover" class="h-card">Hover</h3>
+        </header>
+        <p class="signal"><span class="mono">Signal</span> Rested on pricing for 2 seconds or more.</p>
+        <div class="mini" aria-hidden="true">
+          <span class="bar is-hot">Pricing</span><span class="bar">Hero</span><span class="bar">Features</span>
+        </div>
+        <dl class="changes">
+          <div><dt class="mono">Layout</dt><dd>Pricing moves up, above the features.</dd></div>
+          <div><dt class="mono">Copy</dt><dd>The sub-headline leads with the price.</dd></div>
+          <div><dt class="mono">CTA</dt><dd>"Learn more" becomes "Start free".</dd></div>
+        </dl>
+        <p class="try"><Icon name="lucide:hand" aria-hidden="true" />Try it: rest your pointer on this card.</p>
+        <p class="expand-researcher more">Hover only counts after 1.2 seconds, so passing over a section on the way somewhere else changes nothing.</p>
+      </article>
+
+      <article class="col card" data-key="scroll" data-order="2" aria-labelledby="col-scroll">
+        <header class="col-head">
+          <Icon name="lucide:mouse" aria-hidden="true" />
+          <h3 id="col-scroll" class="h-card">Scroll</h3>
+        </header>
+        <p class="signal"><span class="mono">Signal</span> Skimmed fast, above 1,400 pixels a second.</p>
+        <div class="mini is-compact" aria-hidden="true">
+          <span class="bar">Hero</span><span class="bar short">One-line summary</span><span class="bar short">One-line summary</span>
+        </div>
+        <dl class="changes">
+          <div><dt class="mono">Layout</dt><dd>Spacing tightens into a compact layout.</dd></div>
+          <div><dt class="mono">Copy</dt><dd>Long paragraphs shorten to one line with "Read more".</dd></div>
+          <div><dt class="mono">CTA</dt><dd>The main button stays on the first screen.</dd></div>
+        </dl>
+        <p class="try"><Icon name="lucide:move-vertical" aria-hidden="true" />Try it: skim quickly down the page.</p>
+        <p class="expand-researcher more">Speed is a rolling average of the moments you actually scroll, so pausing to read doesn't count as slow.</p>
+      </article>
+
+      <article class="col card" data-key="click" data-order="3" data-first-for="builder" data-signal="code" aria-labelledby="col-click">
+        <header class="col-head">
+          <Icon name="lucide:mouse-pointer-click" aria-hidden="true" />
+          <h3 id="col-click" class="h-card">Click</h3>
+        </header>
+        <p class="signal"><span class="mono">Signal</span> Opened the code or copied it.</p>
+        <div class="code">
+          <pre><code id="snippet" data-snippet>{snippet}</code></pre>
+          <button type="button" class="copy" data-copy="snippet"><Icon name="lucide:copy" aria-hidden="true" /><span data-copy-label>Copy</span></button>
+        </div>
+        <dl class="changes">
+          <div><dt class="mono">Layout</dt><dd>Install moves first.</dd></div>
+          <div><dt class="mono">Copy</dt><dd>"{SHAPES.builder.sub}"</dd></div>
+          <div><dt class="mono">CTA</dt><dd>The button says "Copy the snippet".</dd></div>
+        </dl>
+        <p class="try"><Icon name="lucide:hand" aria-hidden="true" />Try it: click the code or copy it.</p>
+        <p class="expand-researcher more">The snippet is a demo address. It loads after the page renders, so the first paint is always the default page.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .h-section {
+    margin-bottom: 24px;
+    max-width: 20ch;
+  }
+  .intro {
+    margin-bottom: 40px;
+  }
+  .intro p {
+    margin: 0;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .col {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    padding: 24px;
+  }
+  .col-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .col-head svg {
+    width: 22px;
+    height: 22px;
+    color: var(--cobalt);
+  }
+  .col p {
+    margin: 0;
+  }
+  .signal .mono,
+  .changes dt {
+    display: block;
+    font-size: 11px;
+    color: var(--cobalt);
+    margin-bottom: 2px;
+  }
+  .mini {
+    display: grid;
+    gap: 6px;
+    padding: 10px;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+  }
+  .mini.is-compact {
+    gap: 3px;
+  }
+  .bar {
+    display: block;
+    padding: 8px 10px;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .is-compact .bar {
+    padding: 4px 10px;
+  }
+  .bar.short {
+    width: 70%;
+  }
+  .bar.is-hot {
+    border-color: var(--cobalt);
+    color: var(--cobalt);
+  }
+  .changes {
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .changes dd {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .try {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .try svg {
+    width: 18px;
+    height: 18px;
+    color: var(--cobalt);
+    flex-shrink: 0;
+  }
+  .more {
+    font-size: 14px;
+    color: var(--slate);
+  }
+  .code {
+    background: var(--graphite);
+    color: var(--paper);
+    border-radius: 2px;
+    min-width: 0;
+  }
+  pre {
+    margin: 0;
+    padding: 14px;
+    overflow-x: auto;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    margin: 0 14px 14px;
+    padding: 6px 12px;
+    background: none;
+    border: 1px solid rgb(245 244 240 / 0.3);
+    border-radius: 2px;
+    color: var(--paper);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copy:hover {
+    border-color: var(--paper);
+  }
+  .copy:focus-visible,
+  pre:focus-visible {
+    outline-color: var(--paper);
+  }
+  .copy svg {
+    width: 16px;
+    height: 16px;
+  }
+  @media (max-width: 960px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

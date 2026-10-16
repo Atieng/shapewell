@@ -1,10 +1,10 @@
 // Behaviour signals, kept in memory only. Nothing here is sent anywhere.
 
-export type SignalKind = 'code' | 'pricing' | 'explain' | 'faq' | 'limits';
-export const KINDS: SignalKind[] = ['code', 'pricing', 'explain', 'faq', 'limits'];
+export type SignalKind = 'code' | 'pricing' | 'explain';
+export const KINDS: SignalKind[] = ['code', 'pricing', 'explain'];
 
 type PerKind = Record<SignalKind, number>;
-const zero = (): PerKind => ({ code: 0, pricing: 0, explain: 0, faq: 0, limits: 0 });
+const zero = (): PerKind => ({ code: 0, pricing: 0, explain: 0 });
 
 export interface Signals {
   startedAt: number;
@@ -17,9 +17,8 @@ export interface Signals {
   /** Hover time over signal elements, counted only past 1.2 s, ms */
   hover: PerKind;
   clicks: PerKind;
-  billingToggles: number;
-  installTabs: number;
-  jumpedToPricing: number;
+  /** Uses of a copy button */
+  copies: number;
   coarse: boolean;
 }
 
@@ -36,9 +35,7 @@ function fresh(): Signals {
     dwell: zero(),
     hover: zero(),
     clicks: zero(),
-    billingToggles: 0,
-    installTabs: 0,
-    jumpedToPricing: 0,
+    copies: 0,
     coarse: typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches,
   };
 }
@@ -119,13 +116,7 @@ function onClick(e: MouseEvent) {
     const k = el.dataset.signal as SignalKind;
     if (k in signals.clicks) signals.clicks[k]++;
   }
-  if (target.closest('[data-install-tab], [data-copy]')) signals.installTabs++;
-  const a = target.closest('a');
-  if (a && /#pricing$/.test(a.getAttribute('href') || '')) signals.jumpedToPricing++;
-}
-
-export function noteBillingToggle() {
-  signals.billingToggles++;
+  if (target.closest('[data-copy]')) signals.copies++;
 }
 
 /** Call on every page load: re-observes the signal elements of the new page. */
@@ -166,7 +157,7 @@ export function summarise() {
     dwellSeconds: Object.fromEntries(KINDS.map((k) => [k, r(signals.dwell[k])])),
     hoverSeconds: Object.fromEntries(KINDS.map((k) => [k, r(liveHover(k))])),
     clicks: { ...signals.clicks },
-    billingToggles: signals.billingToggles,
+    copies: signals.copies,
     device: signals.coarse ? 'touch' : 'pointer',
   };
 }

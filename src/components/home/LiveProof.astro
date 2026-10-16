@@ -1,0 +1,161 @@
+---
+import SectionHead from '../SectionHead.astro';
+---
+
+<section class="section" id="live" aria-labelledby="live-title">
+  <div class="container">
+    <SectionHead n={2} name="This page is adapting to you" />
+    <div class="live card" data-slide="up">
+      <div class="live-left">
+        <h2 id="live-title" class="h-section">Watch it <span class="accent">read you back.</span></h2>
+        <p>
+          These numbers are measured right now, from how you hover, scroll and click on this page. When one profile
+          clearly leads, the page rebuilds its layout, copy and button for you, and a note pops up to say so.
+        </p>
+        <div class="live-now">
+          <span class="label label-sm">Current profile</span>
+          <strong data-current-profile>Default</strong>
+          <span class="label label-sm"><span class="c" data-engine-status>Watching</span></span>
+        </div>
+        <div class="live-controls">
+          <span class="label label-sm" id="live-replay">Replay as</span>
+          <div class="replay" role="group" aria-labelledby="live-replay">
+            <button type="button" class="btn btn-sm" data-replay="builder" aria-pressed="false">Builder</button>
+            <button type="button" class="btn btn-sm" data-replay="buyer" aria-pressed="false">Buyer</button>
+            <button type="button" class="btn btn-sm" data-replay="researcher" aria-pressed="false">Researcher</button>
+          </div>
+          <div class="live-row">
+            <button type="button" class="btn btn-sm btn-ghost" data-reset>Reset</button>
+            <div class="switch-wrap">
+              <span id="live-pause-label" class="switch-text">Pause</span>
+              <button type="button" role="switch" class="switch" aria-checked="false" aria-labelledby="live-pause-label" data-pause><span></span></button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" data-open-why aria-controls="why-panel" aria-expanded="false">See why it changed</button>
+        <p class="live-privacy label label-sm"><span class="c">Signals stay in your browser.</span> Nothing is stored or sent.</p>
+      </div>
+      <div class="live-right">
+        <p class="label label-sm"><span class="c">Live signals</span> / this tab only</p>
+        <div class="meters" data-meters aria-live="off">
+          <noscript><p>Turn on JavaScript to see live signals. The page still works without it.</p></noscript>
+        </div>
+        <p class="label label-sm scores-label"><span class="c">Profile scores</span> / leader needs +25 %</p>
+        <div class="meters" data-scores></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .live {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding: 40px;
+  }
+  .live-left,
+  .live-right {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    justify-items: start;
+    min-width: 0;
+  }
+  .live-right {
+    justify-items: stretch;
+  }
+  .live-left p {
+    margin: 0;
+  }
+  .live-right .label {
+    margin: 0;
+  }
+  .scores-label {
+    margin-top: 12px !important;
+  }
+  .live-now {
+    display: grid;
+    gap: 6px;
+    padding: 16px 0;
+    border-block: 1px solid var(--hairline);
+    width: 100%;
+  }
+  .live-now strong {
+    font-family: var(--f-head);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--cobalt);
+  }
+  .live-controls {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+  }
+  .replay {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .replay .btn {
+    padding-inline: 8px;
+  }
+  .replay .btn[aria-pressed='true'] {
+    background: var(--cobalt);
+    border-color: var(--cobalt);
+    color: var(--white);
+  }
+  .live-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .switch-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .switch-text {
+    font-size: 14px;
+  }
+  .switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border: 1px solid var(--graphite);
+    border-radius: 2px;
+    background: var(--white);
+    cursor: pointer;
+    padding: 0;
+  }
+  .switch span {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: var(--graphite);
+    transition: transform 0.2s ease;
+  }
+  .switch[aria-checked='true'] {
+    background: var(--cobalt);
+    border-color: var(--cobalt);
+  }
+  .switch[aria-checked='true'] span {
+    transform: translateX(20px);
+    background: var(--white);
+  }
+  .live-privacy {
+    padding-top: 4px;
+  }
+  @media (max-width: 860px) {
+    .live {
+      grid-template-columns: 1fr;
+      padding: 20px;
+      gap: 32px;
+    }
+  }
+</style>

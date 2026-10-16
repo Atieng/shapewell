@@ -265,17 +265,6 @@ h4 {
   gap: 12px;
 }
 
-.kbd {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1;
-  padding: 3px 5px;
-  border: 1px solid currentColor;
-  border-radius: 2px;
-  opacity: 0.8;
-}
-
 .link {
   color: var(--graphite);
   text-decoration: underline;
@@ -435,7 +424,7 @@ html.lenis body {
   overflow: clip;
 }
 
-/* ---------- Meters (studio + live preview) ---------- */
+/* ---------- Meters (panel + live proof) ---------- */
 .meters {
   display: grid;
   gap: 12px;
@@ -481,22 +470,11 @@ html.lenis body {
   color: var(--cobalt);
 }
 
-html.studio-lock {
+html.panel-lock {
   overflow: hidden;
 }
-@media (min-width: 1100px) {
-  html.studio-docked main {
-    padding-right: 440px;
-  }
-}
 
-/* Reorderable group helpers */
-[data-key='pricing-preview'] {
-  display: none;
-}
-html[data-shape='buyer'] [data-key='pricing-preview'] {
-  display: block;
-}
+/* Builder and buyer extras */
 .expand-builder,
 .expand-buyer {
   display: none;

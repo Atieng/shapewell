@@ -60,9 +60,7 @@ import { Icon } from 'astro-icon/components';
     width: 18px;
     height: 18px;
   }
-  @media (max-width: 760px) {
-    .toast {
-      bottom: 74px;
-    }
+  :global(html[data-shape='mobile']) .toast {
+    bottom: 84px;
   }
 </style>

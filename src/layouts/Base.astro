@@ -7,17 +7,16 @@ import '@fontsource/manrope/600.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
-import BottomBar from '../components/BottomBar.astro';
-import Studio from '../components/Studio.astro';
+import StickyCta from '../components/StickyCta.astro';
+import WhyPanel from '../components/WhyPanel.astro';
 import Toast from '../components/Toast.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
   description: string;
-  studioDocked?: boolean;
 }
-const { title, description, studioDocked = false } = Astro.props;
+const { title, description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const og = new URL('/og-image.png', Astro.site);
 ---
@@ -46,16 +45,16 @@ const og = new URL('/og-image.png', Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
     <ClientRouter />
   </head>
-  <body data-studio-docked={studioDocked ? '' : undefined}>
+  <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <Nav />
     <main id="main">
       <slot />
     </main>
     <Footer />
-    <BottomBar />
+    <StickyCta />
     <Toast />
-    <Studio />
+    <WhyPanel />
     <script>
       import '../scripts/app';
     </script>

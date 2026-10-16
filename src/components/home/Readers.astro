@@ -6,36 +6,58 @@ import r2 from '../../assets/images/reader-2.jpg';
 import r3 from '../../assets/images/reader-3.jpg';
 
 const readers = [
-  { key: 'builder', name: 'Builder', line: 'Wants the code, fast.', img: r1, alt: 'Two developers working at desks with large monitors', slide: 'left' },
-  { key: 'buyer', name: 'Buyer', line: 'Wants the price, clearly.', img: r2, alt: 'A smiling woman with curly hair in a bright office', slide: 'up' },
-  { key: 'researcher', name: 'Researcher', line: 'Wants to understand it first.', img: r3, alt: 'A man with glasses thinking, chin resting on his hand', slide: 'right' },
+  { key: 'builder', name: 'Builder', wants: 'The install code.', gets: 'Three screens of story first.', img: r1, alt: 'Two developers working at desks with large monitors', slide: 'left' },
+  { key: 'buyer', name: 'Buyer', wants: 'The price.', gets: 'Code samples and feature lists.', img: r2, alt: 'A smiling woman with curly hair in a bright office', slide: 'up' },
+  { key: 'researcher', name: 'Researcher', wants: 'How it works.', gets: 'A big button and a short tagline.', img: r3, alt: 'A man with glasses thinking, chin resting on his hand', slide: 'right' },
 ] as const;
 ---
 
-<section class="section" id="readers" aria-labelledby="readers-title">
+<section class="section" id="problem" aria-labelledby="problem-title" data-signal="explain">
   <div class="container">
-    <SectionHead name="Who's reading" />
-    <h2 id="readers-title" class="h-section">Three people. <span class="accent">One page.</span></h2>
+    <SectionHead n={1} name="The average visitor doesn't exist" />
+    <h2 id="problem-title" class="h-section">Static pages are designed <span class="accent">for nobody in particular.</span></h2>
+    <div class="collapsible long intro">
+      <p class="clip">
+        A normal website is built once and shown the same way to everyone. It is designed for an average user, so the
+        person actually reading it has to dig for the part they came for.
+      </p>
+      <button type="button" class="more-btn" aria-expanded="false">Read more</button>
+    </div>
     <ul class="readers">
       {
-        readers.map((r) => (
+        readers.map((r, i) => (
           <li class="reader" data-reader={r.key} data-slide={r.slide}>
             <span class="you mono">This is you</span>
-            <Frame src={r.img} alt={r.alt} ratio="4 / 5" sizes="(max-width: 760px) 100vw, 380px" widths={[360, 560, 760]} />
-            <div class="reader-text">
-              <span class="label"><span class="c">{r.name}</span></span>
-              <p>{r.line}</p>
-            </div>
+            <Frame
+              src={r.img}
+              alt={r.alt}
+              caption={`Fig. 0${i + 1} - ${r.name}, same page`}
+              ratio="4 / 5"
+              sizes="(max-width: 760px) 100vw, 380px"
+              widths={[360, 560, 760]}
+            />
+            <dl class="reader-text">
+              <div><dt class="mono">Wants</dt><dd>{r.wants}</dd></div>
+              <div><dt class="mono">Static page shows</dt><dd>{r.gets}</dd></div>
+            </dl>
           </li>
         ))
       }
     </ul>
+    <p class="readers-cap label"><span class="c">Three people, one static page.</span> Each sees what the others need.</p>
   </div>
 </section>
 
 <style>
   .h-section {
+    margin-bottom: 24px;
+    max-width: 18ch;
+  }
+  .intro {
     margin-bottom: 40px;
+  }
+  .intro p {
+    margin: 0;
   }
   .readers {
     list-style: none;
@@ -69,12 +91,26 @@ const readers = [
     visibility: visible;
   }
   .reader-text {
+    margin: 0;
     padding-top: 14px;
+    display: grid;
+    gap: 10px;
   }
-  .reader-text p {
-    margin: 6px 0 0;
-    font-size: 18px;
+  .reader-text dt {
+    font-size: 11px;
+    color: var(--cobalt);
+  }
+  .reader-text dd {
+    margin: 2px 0 0;
+    font-size: 17px;
     font-weight: 500;
+  }
+  .readers-cap {
+    max-width: none;
+    display: block;
+    margin: 32px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--hairline);
   }
   @media (max-width: 760px) {
     .readers {

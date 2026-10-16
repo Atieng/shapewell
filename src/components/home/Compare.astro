@@ -1,0 +1,116 @@
+---
+import SectionHead from '../SectionHead.astro';
+
+const rows = [
+  ['Versions', 'Two versions of the page', 'One version per visitor'],
+  ['Who sees what', 'Traffic split at random', 'Decided live, from each visitor’s own signals'],
+  ['Result', 'Pick the average winner', 'Each reader gets the page that fits them'],
+  ['Time to adapt', 'Weeks', 'Seconds'],
+];
+---
+
+<section class="section" id="compare" aria-labelledby="compare-title" data-signal="explain">
+  <div class="container">
+    <SectionHead n={4} name="Not an A/B test" />
+    <h2 id="compare-title" class="h-section">A/B testing finds the average. <span class="accent">Shapewell skips it.</span></h2>
+    <div class="table-wrap" data-slide="up">
+      <table>
+        <caption class="sr-only">A/B testing compared with Shapewell's 1-to-1 personalisation</caption>
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="col">A/B testing</th>
+            <th scope="col" class="us">Shapewell, <span class="nowrap">1-to-1</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map(([k, ab, us]) => (
+              <tr>
+                <th scope="row" class="mono">{k}</th>
+                <td>{ab}</td>
+                <td class="us">{us}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="expand-researcher note">
+      Shapewell never shows a visitor a random version. Until one profile leads the others by 25 %, everyone gets the
+      default page, and every change after that comes with a written reason.
+    </p>
+  </div>
+</section>
+
+<style>
+  .h-section {
+    margin-bottom: 40px;
+    max-width: 20ch;
+  }
+  .table-wrap {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th,
+  td {
+    text-align: left;
+    vertical-align: top;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  thead th {
+    font-family: var(--f-head);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 1.1;
+  }
+  thead th.us {
+    color: var(--cobalt);
+  }
+  tbody th {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    width: 22%;
+    padding-top: 20px;
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+  td.us {
+    font-weight: 600;
+    border-left: 2px solid var(--cobalt);
+  }
+  .note {
+    margin: 24px 0 0;
+    color: var(--slate);
+  }
+  @media (max-width: 640px) {
+    th,
+    td {
+      padding: 12px 10px;
+      font-size: 14px;
+    }
+    thead th {
+      font-size: 15px;
+    }
+    tbody th {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+    }
+  }
+</style>

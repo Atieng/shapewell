@@ -13,62 +13,51 @@ export interface ShapeDef {
   sub: string;
   cta: string;
   /** what the primary button does */
-  action: 'copy' | 'pricing' | 'how' | 'studio';
-  /** which block of the reorderable group goes first */
+  action: 'copy' | 'join' | 'why' | 'live';
+  /** which column of the reorderable group goes first */
   first: 'builder' | 'buyer' | 'researcher' | null;
   layout: string[];
 }
 
 export const SHAPES: Record<Shape, ShapeDef> = {
   default: {
-    sub: 'Shapewell reads how each visitor moves through your page and reshapes it for them, in real time.',
+    sub: 'Most websites are built once, for an average visitor. Shapewell rebuilds the layout, copy and button for each person, live, from how they hover, scroll and click.',
     cta: 'Watch it adapt to you',
-    action: 'studio',
+    action: 'live',
     first: null,
     layout: [],
   },
   builder: {
-    sub: 'Three lines, 4 kB, no cookies. Your page adapts in the browser.',
+    sub: 'One script tag, 4 kB, no cookies. The page rebuilds itself in the browser.',
     cta: 'Copy the snippet',
     action: 'copy',
     first: 'builder',
     layout: [
-      'Install moved to the top of the middle sections.',
-      'Spacing tightened to a compact density.',
-      'The install block expanded to show framework snippets.',
-      'Marketing paragraphs collapsed to one-line summaries with "Read more".',
-    ],
-  },
-  buyer: {
-    sub: 'Free for your first site. Pay only when it lifts your conversions.',
-    cta: 'Start free',
-    action: 'pricing',
-    first: 'buyer',
-    layout: [
-      'A pricing preview moved to the top of the middle sections.',
-      'Pricing cards grew larger.',
-      'A short plan comparison table opened.',
+      'The Click column, with the install snippet, moved to the front.',
+      'Spacing tightened to a compact layout.',
       'Long paragraphs collapsed to one line with "Read more".',
     ],
   },
+  buyer: {
+    sub: 'Free during early access. No card, no setup call.',
+    cta: 'Join early access',
+    action: 'join',
+    first: 'buyer',
+    layout: ['The Hover column, about pricing, moved to the front.', 'Long paragraphs collapsed to one line with "Read more".'],
+  },
   researcher: {
-    sub: "Every change comes with a reason, and nothing leaves the visitor's browser.",
+    sub: "Every change comes with a reason you can read, and the signals never leave the visitor's browser.",
     cta: 'See how it decides',
-    action: 'how',
+    action: 'why',
     first: 'researcher',
-    layout: [
-      'How it works moved to the top of the middle sections.',
-      'The reading column widened to 76 characters.',
-      'Explanations and honest limits expanded.',
-      'The first two FAQ answers opened.',
-    ],
+    layout: ['The reading column widened to 76 characters.', 'Extra detail opened in the signal columns and the A/B comparison.'],
   },
   mobile: {
     sub: 'A page that fits your phone and the person holding it.',
-    cta: 'Start free',
-    action: 'pricing',
+    cta: 'Join early access',
+    action: 'join',
     first: null,
-    layout: ['The hero was shortened and its photos hidden.', 'A sticky call-to-action bar appeared at the bottom.'],
+    layout: ['The hero photos were hidden.', 'A "Join early access" button was pinned to the bottom of the screen.'],
   },
 };
 
@@ -118,32 +107,9 @@ function reorder(shape: Shape) {
     }
     kids.forEach((k) => group.appendChild(k));
   });
-  renumber();
 }
 
-/** Section index labels follow the real order on the page. */
-export function renumber() {
-  let i = 0;
-  document.querySelectorAll<HTMLElement>('[data-index] .c').forEach((c) => {
-    if ((c.closest('[data-key]') as HTMLElement | null)?.hidden) return;
-    if (c.closest('[data-key="pricing-preview"]') && current !== 'buyer') return;
-    i++;
-    c.textContent = String(i).padStart(2, '0');
-  });
-}
-
-let openedFaq: HTMLDetailsElement[] = [];
 function details(shape: Shape) {
-  openedFaq.forEach((d) => (d.open = false));
-  openedFaq = [];
-  if (shape === 'researcher') {
-    document.querySelectorAll<HTMLDetailsElement>('details[data-faq]').forEach((d, i) => {
-      if (i < 2 && !d.open) {
-        d.open = true;
-        openedFaq.push(d);
-      }
-    });
-  }
   document.querySelectorAll<HTMLDetailsElement>('details[data-open-for]').forEach((d) => {
     d.open = (d.dataset.openFor || '').split(' ').includes(shape);
   });
@@ -188,17 +154,17 @@ export async function applyShape(shape: Shape, opts: { animate?: boolean } = {})
 /** What the primary button does in the current shape. */
 export function runCta(el: HTMLElement) {
   const action = el.dataset.action as ShapeDef['action'];
-  if (action === 'studio') {
-    document.dispatchEvent(new CustomEvent('shapewell:open-studio'));
+  if (action === 'why') {
+    document.dispatchEvent(new CustomEvent('shapewell:open-why'));
   } else if (action === 'copy') {
     const code = document.querySelector<HTMLElement>('[data-snippet]');
     if (code) navigator.clipboard?.writeText(code.textContent?.trim() || '').catch(() => {});
-    scrollToId('install');
+    scrollToId('signals');
     document.dispatchEvent(new CustomEvent('shapewell:toast', { detail: { text: 'Snippet copied. It is a demo URL.' } }));
-  } else if (action === 'pricing') {
-    scrollToId('pricing');
-  } else if (action === 'how') {
-    scrollToId('how-it-decides');
+  } else if (action === 'join') {
+    scrollToId('early-access');
+  } else {
+    scrollToId('live');
   }
 }
 

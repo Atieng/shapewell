@@ -10,7 +10,7 @@ import { SHAPES } from '../../scripts/reshape';
 <section class="hero" aria-labelledby="hero-title">
   <div class="container grid-12 hero-grid">
     <div class="hero-text">
-      <p class="label" data-hero-fade><span class="c">Built for the person reading</span> / not the average visitor</p>
+      <p class="label" data-hero-fade><span class="c">1-to-1 personalisation</span> / not A/B testing</p>
       <h1 id="hero-title" class="h-display" data-hero-h1>
         Your website, shaped for <span class="accent">whoever is reading it.</span>
       </h1>
@@ -19,14 +19,14 @@ import { SHAPES } from '../../scripts/reshape';
         <span class="swap-line" aria-hidden="true"></span>
       </p>
       <div class="btn-row" data-hero-fade>
-        <button type="button" class="btn btn-primary" data-reshape="cta" data-action="studio">
+        <button type="button" class="btn btn-primary" data-reshape="cta" data-action="live">
           <span data-swap-text>{SHAPES.default.cta}</span>
           <Icon name="lucide:arrow-right" aria-hidden="true" />
         </button>
-        <a class="btn" href="/sample">Explore a sample</a>
+        <button type="button" class="btn" data-open-why aria-controls="why-panel" aria-expanded="false">See why it changed</button>
       </div>
       <p class="hero-extra muted" data-hero-fade>
-        This page is the demo. Read it the way you normally would, then press <span class="kbd">K</span> to see what it noticed.
+        This page is the demo. Read it the way you normally would. It rebuilds itself as you hover, scroll and click.
       </p>
     </div>
 
