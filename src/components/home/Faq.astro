@@ -1,0 +1,108 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHead from '../SectionHead.astro';
+
+const faqs = [
+  {
+    q: 'Is this tracking me?',
+    a: 'Not in the usual sense. The signals are anonymous numbers about how this page is being read, they stay in memory in your browser and they disappear when you close the tab. Nothing is sent to a server, and nothing is tied to who you are.',
+  },
+  {
+    q: 'Does it slow my site down?',
+    a: 'The script loads with defer, after your page has rendered, and the planned size is about 4 kB. It does its work in small timers and observers, not on every frame. You can check this page in your browser tools: there are no network calls with signal data.',
+  },
+  {
+    q: 'Does Google see a different page?',
+    a: 'No. Search engines and the first paint always get the default page, because Shapewell only changes things after it has watched a real visitor for a few seconds. All content stays in the HTML, so nothing is hidden from crawlers.',
+  },
+  {
+    q: 'Do I need a cookie banner?',
+    a: 'Shapewell itself sets no cookies and stores nothing unless a visitor saves a run on purpose. Whether your site needs a banner depends on your other tools, so check with whoever handles your compliance.',
+  },
+  {
+    q: 'Is it accessible?',
+    a: 'Changes respect reduced motion, keep focus where it was, and never remove content, only reorder or shorten it with a "Read more" button. The studio works with a keyboard and a screen reader. If you find something that does not, please tell us.',
+  },
+  {
+    q: 'What if it guesses wrong?',
+    a: 'It will sometimes. That is why changes are small, need a clear lead before they happen, hold steady for 20 seconds, and can be reset by the visitor at any time. Every change also comes with a reason, so your team can spot a bad rule quickly.',
+  },
+];
+---
+
+<section class="section" id="faq" aria-labelledby="faq-title" data-signal="faq">
+  <div class="container grid-12 faq-grid">
+    <div class="faq-head" data-slide="left">
+      <SectionHead name="FAQ" />
+      <h2 id="faq-title" class="h-section">Questions about <span class="accent">trust.</span></h2>
+      <p class="muted">Short, honest answers. If yours is missing, ask us at <a class="link" href="mailto:privacy@shapewell.dev">privacy@shapewell.dev</a>.</p>
+    </div>
+    <div class="faq-list">
+      {
+        faqs.map((f) => (
+          <details data-faq data-slide="up">
+            <summary>
+              <span>{f.q}</span>
+              <Icon name="lucide:plus" aria-hidden="true" />
+            </summary>
+            <p>{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-grid {
+    align-items: start;
+    row-gap: 32px;
+  }
+  .faq-head {
+    grid-column: 1 / span 4;
+  }
+  .faq-head .h-section {
+    margin-bottom: 20px;
+  }
+  .faq-list {
+    grid-column: 6 / span 7;
+    border-top: 1px solid var(--hairline);
+  }
+  details {
+    border-bottom: 1px solid var(--hairline);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+  details[open] summary svg {
+    transform: rotate(45deg);
+    color: var(--cobalt);
+  }
+  details p {
+    margin: 0 0 22px;
+    padding-right: 36px;
+  }
+  @media (max-width: 900px) {
+    .faq-head,
+    .faq-list {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

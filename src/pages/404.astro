@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+---
+
+<Base title="Page not found | Shapewell" description="This page does not exist. Head back to the Shapewell home page.">
+  <section class="section nf" aria-labelledby="nf-title">
+    <div class="container nf-inner">
+      <Logo size={56} wordmark={false} href={null} />
+      <p class="label"><span class="c">Error 404</span> / page not found</p>
+      <h1 id="nf-title" class="h-display" data-slide="up">This page took a shape <span class="accent">we didn't expect.</span></h1>
+      <a class="btn btn-primary" href="/" data-slide="up">Back to home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+  .nf-inner {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+  h1 {
+    max-width: 16ch;
+  }
+</style>

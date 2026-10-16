@@ -112,10 +112,12 @@ function bindBilling() {
   });
 }
 
+const money = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
+
 function animatePrice(el: HTMLElement, to: number) {
   const from = Number(el.textContent?.replace(/[^\d.]/g, '')) || 0;
-  if (reducedMotion()) {
-    el.textContent = `$${to}`;
+  if (reducedMotion() || from === to) {
+    el.textContent = money(to);
     return;
   }
   const o = { v: from };
@@ -124,6 +126,7 @@ function animatePrice(el: HTMLElement, to: number) {
     duration: 0.6,
     ease: 'power2.out',
     onUpdate: () => (el.textContent = `$${Math.round(o.v)}`),
+    onComplete: () => (el.textContent = money(to)),
   });
 }
 

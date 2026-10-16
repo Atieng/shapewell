@@ -1,0 +1,171 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+
+const toc = [
+  ['signals', 'What signals are read'],
+  ['where', 'Where they live'],
+  ['never-collected', 'What is never collected'],
+  ['never-adapts', 'What never adapts'],
+  ['dnt', 'Do Not Track and GPC'],
+  ['pause', 'How to pause or reset'],
+  ['contact', 'Contact'],
+];
+---
+
+<Base
+  title="Privacy: what Shapewell sees, and what it never does"
+  description="Which behaviour signals Shapewell reads, where they live, what is never collected, what never adapts, and how Do Not Track and GPC are respected.">
+  <section class="section privacy" aria-labelledby="pv-title">
+    <div class="container grid-12 pv-grid">
+      <header class="pv-head" data-slide="left">
+        <SectionHead name="Privacy" />
+        <h1 id="pv-title" class="h-display">What Shapewell sees, <span class="accent">and what it never does.</span></h1>
+        <p class="label label-sm"><span class="c">Last updated</span> / 15 October 2026</p>
+      </header>
+
+      <nav class="toc" aria-label="On this page" data-slide="left">
+        <p class="label label-sm"><span class="c">On this page</span></p>
+        <ol>
+          {toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
+        </ol>
+      </nav>
+
+      <article class="pv-body">
+        <section id="signals" data-slide="up">
+          <h2 class="h-card">What signals are read</h2>
+          <p>While you read a page that uses Shapewell, the script reads a few behaviour signals in your browser:</p>
+          <ul>
+            <li>How fast you scroll, as a rolling average in pixels per second, and how far down you got.</li>
+            <li>How long certain sections were in view, and how long you rested the pointer on them (only counted after 1.2 seconds).</li>
+            <li>Clicks on those sections, and whether you used the monthly or yearly billing toggle.</li>
+            <li>Whether your device uses touch or a mouse.</li>
+          </ul>
+          <p>These are numbers about reading, not about you. You can watch every one of them live in the studio.</p>
+        </section>
+
+        <section id="where" data-slide="up">
+          <h2 class="h-card">Where they live</h2>
+          <p>
+            In memory, in the tab you have open. They are not written to cookies or storage, and they are not sent to a
+            server. When you close the tab, they are gone.
+          </p>
+          <p>
+            The one exception is a run or variant you choose to save with "Save this run" or "Save variant". That is stored
+            in your browser's localStorage under <code>shapewell_runs</code>, on this device only, until you delete it from
+            your library.
+          </p>
+        </section>
+
+        <section id="never-collected" data-slide="up">
+          <h2 class="h-card">What is never collected</h2>
+          <ul>
+            <li>Names, email addresses or account details.</li>
+            <li>IP-based location.</li>
+            <li>Device fingerprints or cross-site identifiers.</li>
+            <li>Any personal data. The early access form on this demo does not send your email anywhere.</li>
+          </ul>
+        </section>
+
+        <section id="never-adapts" data-slide="up">
+          <h2 class="h-card">What never adapts</h2>
+          <p>
+            Prices, checkout, and legal pages, including these terms. They are the same for everyone. Shapewell can reorder
+            and shorten content, but it never hides information: every collapsed paragraph keeps a "Read more" button.
+          </p>
+        </section>
+
+        <section id="dnt" data-slide="up">
+          <h2 class="h-card">Do Not Track and GPC</h2>
+          <p>
+            If your browser sends Do Not Track or Global Privacy Control, adapting is paused by default and the studio says
+            so. You can still turn it on yourself, or replay a profile to see what would change.
+          </p>
+        </section>
+
+        <section id="pause" data-slide="up">
+          <h2 class="h-card">How to pause or reset</h2>
+          <p>
+            Open the studio with the "Open studio" button or the K key. Use "Pause adapting" to stop changes, or "Reset to
+            default" to clear the signals and return the page to its default shape.
+          </p>
+        </section>
+
+        <section id="contact" data-slide="up">
+          <h2 class="h-card">Contact</h2>
+          <p>Questions about privacy: <a class="link" href="mailto:privacy@shapewell.dev">privacy@shapewell.dev</a>.</p>
+        </section>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pv-grid {
+    align-items: start;
+    row-gap: 32px;
+  }
+  .pv-head {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 20px;
+  }
+  .pv-head .section-head {
+    margin-bottom: 0;
+  }
+  .pv-head h1 {
+    max-width: 18ch;
+  }
+  .toc {
+    grid-column: 1 / span 3;
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+  }
+  .toc ol {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .toc a {
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--hairline);
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .toc a:hover {
+    color: var(--cobalt);
+  }
+  .pv-body {
+    grid-column: 5 / span 8;
+  }
+  .pv-body section {
+    padding: 28px 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .pv-body h2 {
+    margin-bottom: 14px;
+  }
+  .pv-body ul {
+    margin: 0 0 1em;
+    padding-left: 20px;
+    max-width: var(--measure);
+  }
+  .pv-body li {
+    margin-bottom: 6px;
+  }
+  code {
+    font-family: var(--f-mono);
+    font-size: 14px;
+  }
+  @media (max-width: 900px) {
+    .toc,
+    .pv-body {
+      grid-column: 1 / -1;
+    }
+    .toc {
+      position: static;
+    }
+  }
+</style>

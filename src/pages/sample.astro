@@ -1,0 +1,301 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Frame from '../components/Frame.astro';
+import Logo from '../components/Logo.astro';
+import Label from '../components/Label.astro';
+import s1 from '../assets/images/sample-1.jpg';
+import s2 from '../assets/images/sample-2.jpg';
+import s3 from '../assets/images/sample-3.jpg';
+
+const specs = [
+  ['Capacity', '0.9 L'],
+  ['Material', 'Brushed stainless steel'],
+  ['Spout', 'Gooseneck, 7 mm opening'],
+  ['Temperature', '40 to 100 °C, 1 °C steps'],
+  ['Hold', 'Keeps temperature for 60 minutes'],
+  ['Base', '1200 W, 230 V or 120 V'],
+  ['Weight', '1.1 kg'],
+];
+const guide = [
+  'Heat water to 94 °C and rinse the paper filter.',
+  'Add 15 g of medium-fine coffee for 250 g of water.',
+  'Pour 40 g, wait 30 seconds while it blooms.',
+  'Pour slowly in small circles until you reach 250 g by 2:30.',
+  'Let it drain. Total time should be about 3 minutes.',
+];
+const faqs = [
+  ['Can I use it on a gas stove?', 'No. It works only on its own electric base.'],
+  ['Is the inside coated?', 'No. Every part that touches water is uncoated stainless steel.'],
+  ['What if it breaks?', 'It has a two-year warranty. We repair or replace it, and pay the shipping.'],
+];
+---
+
+<Base
+  title="Sample shop: Kettle & Grind pour-over kettle | Shapewell"
+  description="A demo product page for a fictional coffee shop. Watch it reshape for builders, buyers and researchers with the same Shapewell engine."
+  studioDocked>
+  <div class="banner">
+    <div class="container banner-inner">
+      <Icon name="lucide:info" aria-hidden="true" />
+      <p><strong>This is a demo shop.</strong> Kettle &amp; Grind is fictional. Nothing here is for sale. Open the studio to see how the page adapts.</p>
+    </div>
+  </div>
+
+  <section class="section product" aria-labelledby="p-title">
+    <div class="container grid-12 product-grid">
+      <div class="gallery" data-slide="left">
+        <Frame src={s1} alt="A gooseneck kettle pouring water into a paper filter on a glass carafe" caption="Fig. 01 - The kettle in use" ratio="4 / 3" eager sizes="(max-width: 900px) 100vw, 560px" />
+        <div class="gallery-small">
+          <Frame src={s2} alt="A pour-over dripper and glass server on a dark counter" caption="Fig. 02 - Pour-over set" ratio="1 / 1" widths={[300, 500]} sizes="(max-width: 900px) 50vw, 270px" />
+          <Frame src={s3} alt="Cups of coffee with latte art among green plants" caption="Fig. 03 - The result" ratio="1 / 1" widths={[300, 500]} sizes="(max-width: 900px) 50vw, 270px" />
+        </div>
+      </div>
+
+      <div class="info" data-slide="right">
+        <div class="shop-brand">
+          <Logo size={22} wordmark={false} href={null} />
+          <span class="label label-sm"><span class="c">Kettle &amp; Grind</span> / adapted by Shapewell</span>
+        </div>
+        <h1 id="p-title" class="h-section">Pour-over kettle <span class="accent">KG-09</span></h1>
+        <p class="lead">
+          <span
+            data-reshape="sub"
+            data-sub-default="A steady gooseneck kettle for slow, even pours, with temperature you can set to the degree."
+            data-sub-builder="0.9 L stainless steel, 7 mm gooseneck spout, 1 °C control from 40 to 100 °C."
+            data-sub-buyer="$89, free delivery in 2 to 4 days, 30-day returns and a two-year warranty."
+            data-sub-researcher="Why a gooseneck matters: a slow, even pour extracts coffee more evenly. The guide below shows how."
+            data-sub-mobile="A steady kettle for better pour-over. $89, free delivery."><span data-swap-text
+              >A steady gooseneck kettle for slow, even pours, with temperature you can set to the degree.</span
+            ></span
+          >
+          <span class="swap-line" aria-hidden="true"></span>
+        </p>
+        <p class="price-line"><strong>$89</strong> <span class="muted">Same price for every visitor.</span></p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" data-demo-cart>Add to cart</button>
+          <a class="btn" href="/">Back to Shapewell</a>
+        </div>
+        <p class="reviews"><span class="mono">Reviews</span> 4.6 out of 5 from 212 reviews <span class="muted">(fictional demo data)</span></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container" data-reorder>
+    <section class="block" data-key="price" data-order="1" data-first-for="buyer" data-signal="pricing" aria-labelledby="b-price">
+      <Label first="Price and delivery" />
+      <h2 id="b-price" class="h-card">$89, delivered free</h2>
+      <ul class="facts">
+        <li><Icon name="lucide:truck" aria-hidden="true" />Free delivery in 2 to 4 working days</li>
+        <li><Icon name="lucide:rotate-ccw" aria-hidden="true" />30-day returns, we pay the shipping</li>
+        <li><Icon name="lucide:shield-check" aria-hidden="true" />Two-year warranty</li>
+      </ul>
+    </section>
+
+    <section class="block" data-key="specs" data-order="2" data-first-for="builder" data-signal="code" aria-labelledby="b-specs">
+      <Label first="Specs" />
+      <h2 id="b-specs" class="h-card">The details</h2>
+      <dl class="specs">
+        {specs.map(([k, v]) => <div><dt class="mono">{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </section>
+
+    <section class="block" data-key="guide" data-order="3" data-first-for="researcher" data-signal="explain" aria-labelledby="b-guide">
+      <Label first="Brewing guide" />
+      <h2 id="b-guide" class="h-card">A good first cup in five steps</h2>
+      <ol class="guide">
+        {guide.map((g, i) => <li><span class="mono">{String(i + 1).padStart(2, '0')}</span>{g}</li>)}
+      </ol>
+    </section>
+
+    <section class="block" data-key="faq" data-order="4" data-signal="faq" aria-labelledby="b-faq">
+      <Label first="Questions" />
+      <h2 id="b-faq" class="h-card">Before you buy</h2>
+      {
+        faqs.map(([q, a]) => (
+          <details data-faq>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))
+      }
+    </section>
+  </div>
+</Base>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelector('[data-demo-cart]')?.addEventListener('click', () => {
+      document.dispatchEvent(
+        new CustomEvent('shapewell:toast', { detail: { text: 'This is a demo shop. Nothing was added to a cart.' } }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .banner {
+    background: var(--white);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .banner-inner {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding-block: 12px;
+  }
+  .banner p {
+    margin: 0;
+    font-size: 14px;
+    max-width: none;
+  }
+  .banner svg {
+    width: 20px;
+    height: 20px;
+    color: var(--cobalt);
+    flex-shrink: 0;
+  }
+  .product {
+    padding-block: 48px 40px;
+  }
+  .product-grid {
+    align-items: start;
+    row-gap: 32px;
+  }
+  .gallery {
+    grid-column: 1 / span 6;
+    display: grid;
+    gap: 16px;
+  }
+  .gallery-small {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .info {
+    grid-column: 8 / span 5;
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .shop-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lead {
+    margin: 0;
+    min-height: 3.2em;
+  }
+  .price-line {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .price-line strong {
+    font-family: var(--f-head);
+    font-size: 44px;
+    line-height: 1;
+  }
+  .price-line .muted {
+    font-size: 14px;
+  }
+  .reviews {
+    margin: 0;
+    font-size: 14px;
+  }
+  .reviews .mono {
+    font-size: 11px;
+    color: var(--cobalt);
+    margin-right: 8px;
+  }
+  [data-reorder] {
+    display: grid;
+    gap: 24px;
+    padding-bottom: 96px;
+  }
+  .block {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    padding: 28px;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
+  .facts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .facts li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .facts svg {
+    width: 20px;
+    height: 20px;
+    color: var(--cobalt);
+  }
+  .specs {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+  }
+  .specs div {
+    padding: 12px 12px 12px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .specs dt {
+    font-size: 11px;
+    color: var(--slate);
+  }
+  .specs dd {
+    margin: 2px 0 0;
+  }
+  .guide {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+    max-width: var(--measure);
+  }
+  .guide li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+  }
+  .guide .mono {
+    color: var(--cobalt);
+    font-size: 11px;
+    padding-top: 4px;
+  }
+  details {
+    border-top: 1px solid var(--hairline);
+  }
+  summary {
+    padding: 14px 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  details p {
+    margin: 0 0 14px;
+  }
+  @media (max-width: 900px) {
+    .gallery,
+    .info {
+      grid-column: 1 / -1;
+    }
+    .specs {
+      grid-template-columns: 1fr;
+    }
+    .block {
+      padding: 20px;
+    }
+  }
+</style>

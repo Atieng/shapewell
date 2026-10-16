@@ -1,0 +1,56 @@
+---
+---
+
+<section class="section closing" id="early-access" aria-labelledby="closing-title">
+  <div class="container">
+    <div class="closing-box" data-slide="up">
+      <p class="label"><span class="c">Early access</span> / no card, no spam</p>
+      <h2 id="closing-title" class="h-display">Stop designing for the <span class="accent">average visitor.</span></h2>
+      <form class="ea" data-early-access novalidate>
+        <label for="ea-email" class="sr-only">Email address</label>
+        <input id="ea-email" class="input" type="email" name="email" autocomplete="email" placeholder="you@company.com" required aria-describedby="ea-msg" />
+        <button type="submit" class="btn btn-primary">Join early access</button>
+        <p id="ea-msg" class="ea-msg" data-form-msg role="status" aria-live="polite"></p>
+      </form>
+      <p class="muted small">This demo does not send your email anywhere. In the product, we will only use it to tell you when Shapewell opens.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .closing-box {
+    border-top: 1px solid var(--graphite);
+    padding-top: 48px;
+    display: grid;
+    gap: 28px;
+  }
+  .h-display {
+    max-width: 16ch;
+  }
+  .ea {
+    display: grid;
+    grid-template-columns: minmax(0, 420px) auto;
+    gap: 12px;
+    align-items: start;
+  }
+  .ea-msg {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-weight: 500;
+  }
+  .ea-msg:empty {
+    display: none;
+  }
+  .ea-msg:global(.is-error) {
+    color: #b3261e;
+  }
+  .small {
+    font-size: 14px;
+    margin: 0;
+  }
+  @media (max-width: 560px) {
+    .ea {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

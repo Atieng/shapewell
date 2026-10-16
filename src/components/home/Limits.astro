@@ -1,0 +1,106 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHead from '../SectionHead.astro';
+
+const limits = [
+  {
+    icon: 'lucide:undo-2',
+    title: 'Rules can guess wrong',
+    text: 'So every change is small and reversible. A visitor can always reset, and the default page is one click away.',
+    more: 'In this demo a profile only wins when it leads by 25 % and then holds for 20 seconds, so a single stray hover cannot flip the page.',
+  },
+  {
+    icon: 'lucide:scale',
+    title: 'Never changes prices or hides information',
+    text: 'Shapewell can reorder and shorten, but every visitor can reach every fact. Prices are the same for everyone.',
+    more: 'Collapsed paragraphs keep a "Read more" button, and the full page is always in the HTML for search engines and screen readers.',
+  },
+  {
+    icon: 'lucide:user-x',
+    title: 'Never uses personal data',
+    text: 'No names, emails, accounts, fingerprints or IP-based location. Only how this page is being read, right now.',
+    more: 'The signals are anonymous numbers: seconds, pixels per second, counts of clicks. They describe reading, not a person.',
+  },
+  {
+    icon: 'lucide:monitor-smartphone',
+    title: 'Signals stay in the browser',
+    text: 'They live in memory and are cleared when the tab closes. Nothing is sent to a server.',
+    more: 'The only thing that is ever stored is a run you choose to save, and it stays in this browser until you delete it.',
+  },
+];
+---
+
+<section class="section" id="limits" aria-labelledby="limits-title" data-signal="limits">
+  <div class="container">
+    <SectionHead name="Honest limits" />
+    <h2 id="limits-title" class="h-section">What Shapewell <span class="accent">won't do.</span></h2>
+    <ul class="limits">
+      {
+        limits.map((l) => (
+          <li data-slide="up">
+            <Icon name={l.icon} aria-hidden="true" />
+            <div>
+              <h3>{l.title}</h3>
+              <p>{l.text}</p>
+              <p class="expand-researcher muted">{l.more}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .h-section {
+    margin-bottom: 40px;
+  }
+  .limits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+  }
+  .limits li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 18px;
+    padding: 28px 24px 28px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .limits li:nth-child(odd) {
+    border-right: 1px solid var(--hairline);
+  }
+  .limits li:nth-child(even) {
+    padding-left: 24px;
+  }
+  .limits svg {
+    width: 24px;
+    height: 24px;
+    color: var(--cobalt);
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+  p {
+    margin: 0;
+  }
+  .expand-researcher {
+    margin-top: 10px;
+  }
+  @media (max-width: 760px) {
+    .limits {
+      grid-template-columns: 1fr;
+    }
+    .limits li,
+    .limits li:nth-child(even) {
+      padding: 24px 0;
+      border-right: 0;
+    }
+  }
+</style>

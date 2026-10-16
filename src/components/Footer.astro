@@ -1,0 +1,155 @@
+---
+import Logo from './Logo.astro';
+const home = Astro.url.pathname === '/';
+const h = (id: string) => (home ? `#${id}` : `/#${id}`);
+const cols = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'How it works', href: h('how') },
+      { label: 'Pricing', href: h('pricing') },
+      { label: 'Sample', href: '/sample' },
+      { label: 'Your experiments', href: '/library' },
+    ],
+  },
+  {
+    title: 'Trust',
+    links: [
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Honest limits', href: h('limits') },
+      { label: 'Accessibility', href: h('faq') },
+      { label: 'Security', href: '/privacy#signals' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'Founder', href: h('founder') },
+      { label: 'Contact', href: 'mailto:privacy@shapewell.dev' },
+      { label: 'Blog', href: '#', soon: true },
+      { label: 'Careers', href: '#', soon: true },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Docs', href: '#', soon: true },
+      { label: 'Install guide', href: h('install') },
+      { label: 'Changelog', href: '#', soon: true },
+      { label: 'Status', href: '#', soon: true },
+    ],
+  },
+];
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="brand" data-slide="up">
+        <Logo size={28} tone="light" />
+        <p>Pages that fit the person reading them.</p>
+      </div>
+      {
+        cols.map((c) => (
+          <nav class="col" aria-label={c.title} data-slide="up">
+            <h2 class="label label-sm">{c.title}</h2>
+            <ul>
+              {c.links.map((l) => (
+                <li>
+                  <a href={l.href} aria-disabled={'soon' in l ? 'true' : undefined}>
+                    {l.label}
+                    {'soon' in l && <span class="soon mono">Soon</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+    <div class="footer-bottom" data-slide="up">
+      <span>(c) 2026 Shapewell</span>
+      <a href="/privacy">Privacy</a>
+      <a href="/privacy#never-adapts">Terms</a>
+      <span class="runs">Runs on Cloudflare</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--graphite);
+    color: var(--paper);
+    padding: 72px 0 32px;
+    overflow-x: clip;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(4, 1fr);
+    gap: 32px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgb(245 244 240 / 0.14);
+  }
+  .brand p {
+    color: #b9bbc2;
+    margin: 16px 0 0;
+    font-size: 15px;
+    max-width: 28ch;
+  }
+  .col h2 {
+    color: #b9bbc2;
+    margin-bottom: 14px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  a {
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 15px;
+  }
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  a[aria-disabled='true'] {
+    color: #b9bbc2;
+  }
+  .soon {
+    font-size: 9px;
+    margin-left: 6px;
+    color: #8fa0ff;
+  }
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    padding-top: 24px;
+    font-size: 14px;
+    color: #b9bbc2;
+  }
+  .footer-bottom a {
+    font-size: 14px;
+  }
+  .runs {
+    margin-left: auto;
+  }
+  :focus-visible {
+    outline-color: var(--paper);
+  }
+  @media (max-width: 900px) {
+    .footer-top {
+      grid-template-columns: 1fr 1fr;
+    }
+    .brand {
+      grid-column: 1 / -1;
+    }
+    .runs {
+      margin-left: 0;
+    }
+  }
+</style>
