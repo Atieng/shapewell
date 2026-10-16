@@ -4,7 +4,7 @@ import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://shapewell.workers.dev',
+  site: 'https://shapewell.lybuilds.workers.dev',
   output: 'static',
   integrations: [
     icon({
