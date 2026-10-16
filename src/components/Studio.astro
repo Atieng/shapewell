@@ -5,7 +5,7 @@ import VibeBox from './VibeBox.astro';
 ---
 
 <div id="studio-backdrop" class="studio-backdrop" hidden></div>
-<aside id="studio" class="studio" role="dialog" aria-modal="true" aria-labelledby="studio-title" hidden>
+<div id="studio" class="studio" role="dialog" aria-modal="true" aria-labelledby="studio-title" hidden>
   <header class="studio-head">
     <div class="studio-brand">
       <Logo size={28} wordmark={false} href={null} />
@@ -70,7 +70,7 @@ import VibeBox from './VibeBox.astro';
       <VibeBox id="studio-vibe" compact />
     </section>
   </div>
-</aside>
+</div>
 
 <style>
   .studio-backdrop {

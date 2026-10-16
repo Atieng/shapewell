@@ -14,6 +14,7 @@ import {
   refreshAfterAssets,
   killScrollTriggers,
   getLenis,
+  whenIdle,
 } from './motion';
 
 let firstLoad = true;
@@ -40,11 +41,13 @@ function onPageLoad() {
   }
 
   heroIntro();
-  initSlideIns();
-  initTypedLabels();
   if (firstLoad) drawSwoosh();
   firstLoad = false;
-  refreshAfterAssets();
+  whenIdle(() => {
+    initSlideIns();
+    initTypedLabels();
+    refreshAfterAssets();
+  });
 }
 
 document.addEventListener('astro:page-load', onPageLoad);

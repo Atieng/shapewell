@@ -45,42 +45,49 @@ const FROM: Record<string, gsap.TweenVars> = {
 export function initSlideIns() {
   if (reducedMotion()) return;
   const els = gsap.utils.toArray<HTMLElement>('[data-slide]:not([data-slid])');
-  ScrollTrigger.batch(els, {
+  // read all positions first, then write, so the browser lays out once
+  const limit = window.innerHeight * 0.85;
+  const below = els.filter((el) => el.getBoundingClientRect().top > limit);
+  below.forEach((el) => gsap.set(el, { ...FROM[el.dataset.slide || 'up'], opacity: 0 }));
+  ScrollTrigger.batch(below, {
     start: 'top 85%',
     once: true,
     onEnter: (batch) => {
       (batch as HTMLElement[]).forEach((el, i) => {
         el.dataset.slid = '';
-        gsap.fromTo(
-          el,
-          { ...FROM[el.dataset.slide || 'up'], opacity: 0 },
-          { x: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', delay: i * 0.12, clearProps: 'transform' },
-        );
+        gsap.to(el, { x: 0, y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', delay: i * 0.12, clearProps: 'transform' });
       });
     },
   });
-  // hide only those that have not entered yet (content stays visible without JS)
-  els.forEach((el) => {
-    if (el.getBoundingClientRect().top > window.innerHeight * 0.85) {
-      gsap.set(el, { ...FROM[el.dataset.slide || 'up'], opacity: 0 });
-    }
-  });
 }
 
-/** Mono labels type in letter by letter over 0.4 s when they enter. */
+/**
+ * Mono labels type in letter by letter over 0.4 s when they enter. The font is
+ * monospaced, so a stepped clip-path reveals exactly one character per step.
+ */
 export function initTypedLabels() {
   if (reducedMotion()) return;
-  gsap.utils.toArray<HTMLElement>('[data-type]').forEach((el) => {
-    const split = SplitText.create(el, { type: 'chars', charsClass: 'ch' });
-    const n = split.chars.length || 1;
-    gsap.set(split.chars, { opacity: 0 });
+  const els = gsap.utils.toArray<HTMLElement>('[data-type]');
+  const limit = window.innerHeight * 0.9;
+  const below = els.filter((el) => el.getBoundingClientRect().top > limit);
+  below.forEach((el) => {
+    const n = Math.max(1, (el.textContent || '').length);
+    gsap.set(el, { clipPath: 'inset(0 100% 0 0)' });
     ScrollTrigger.create({
       trigger: el,
       start: 'top 90%',
       once: true,
-      onEnter: () => gsap.to(split.chars, { opacity: 1, duration: 0.01, stagger: 0.4 / n, ease: 'none' }),
+      onEnter: () =>
+        gsap.to(el, { clipPath: 'inset(0 0% 0 0)', duration: 0.4, ease: `steps(${n})`, clearProps: 'clipPath' }),
     });
   });
+}
+
+/** Run below-the-fold setup when the main thread is free. */
+export function whenIdle(fn: () => void) {
+  const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+  if (ric) ric(fn, { timeout: 600 });
+  else setTimeout(fn, 200);
 }
 
 /** Swoosh on every logo draws in over 0.7 s on first load. */

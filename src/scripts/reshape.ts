@@ -1,11 +1,11 @@
 // Applies a profile (or a vibe-coded variant) to the page: copy, order and shape.
 
 import { gsap } from 'gsap';
-import { Flip } from 'gsap/Flip';
 import type { Active } from './profiles';
 import { reducedMotion } from './motion';
 
-gsap.registerPlugin(Flip);
+let flipMod: Promise<typeof import('gsap/Flip')> | null = null;
+const loadFlip = () => (flipMod ??= import('gsap/Flip').then((m) => (gsap.registerPlugin(m.Flip), m)));
 
 export type Shape = Active;
 
@@ -156,7 +156,7 @@ function setLayout(shape: Shape) {
 }
 
 /** Apply a shape to the current page. */
-export function applyShape(shape: Shape, opts: { animate?: boolean } = {}) {
+export async function applyShape(shape: Shape, opts: { animate?: boolean } = {}) {
   const animate = opts.animate !== false && !reducedMotion();
   current = shape;
 
@@ -166,14 +166,15 @@ export function applyShape(shape: Shape, opts: { animate?: boolean } = {}) {
     el.dataset.action = el.dataset[`action${dataKey(shape)}`] ?? SHAPES[shape].action;
   });
 
+  const Flip = animate ? (await loadFlip()).Flip : null;
   const targets = gsap.utils.toArray<HTMLElement>('[data-reorder] > *, [data-flip]');
-  const state = animate ? Flip.getState(targets) : null;
+  const state = Flip ? Flip.getState(targets) : null;
 
   setLayout(shape);
   reorder(shape);
   details(shape);
 
-  if (state) {
+  if (Flip && state) {
     Flip.from(state, {
       duration: 0.8,
       ease: 'power3.inOut',
