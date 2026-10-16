@@ -42,7 +42,6 @@ html[data-shape='researcher'] {
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--nav-h) + 16px);
 }
 
 body {
@@ -124,6 +123,24 @@ h4 {
 }
 
 /* ---------- Layout ---------- */
+/* Anchored sections stop just below the sticky nav. */
+section,
+footer {
+  scroll-margin-top: var(--nav-h);
+}
+
+/* Browsers without overflow: clip (Safari before 16) would let off-screen
+   slide-ins widen the page and scroll it sideways. */
+@supports not (overflow: clip) {
+  html,
+  body,
+  .section,
+  .hero,
+  .footer {
+    overflow-x: hidden;
+  }
+}
+
 .container {
   width: 100%;
   max-width: 1200px;

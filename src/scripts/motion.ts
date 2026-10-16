@@ -15,14 +15,14 @@ export const getLenis = () => lenis;
 
 export function initLenis() {
   if (lenis || reducedMotion()) return;
-  lenis = new Lenis({ anchors: { offset: -80 }, autoRaf: false, lerp: 0.12 });
+  lenis = new Lenis({ anchors: { offset: -64 }, autoRaf: false, lerp: 0.12 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis?.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
 }
 
 export function scrollToEl(el: HTMLElement) {
-  if (lenis) lenis.scrollTo(el, { offset: -80 });
+  if (lenis) lenis.scrollTo(el, { offset: -64 });
   else el.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
 }
 
