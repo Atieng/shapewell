@@ -1,0 +1,283 @@
+---
+import { Icon } from 'astro-icon/components';
+import Logo from './Logo.astro';
+import VibeBox from './VibeBox.astro';
+---
+
+<div id="studio-backdrop" class="studio-backdrop" hidden></div>
+<aside id="studio" class="studio" role="dialog" aria-modal="true" aria-labelledby="studio-title" hidden>
+  <header class="studio-head">
+    <div class="studio-brand">
+      <Logo size={28} wordmark={false} href={null} />
+      <div>
+        <h2 id="studio-title" class="studio-title">Studio</h2>
+        <p class="label label-sm"><span class="c" data-engine-status>Watching</span></p>
+      </div>
+    </div>
+    <button type="button" class="studio-x" data-close-studio aria-label="Close studio (Esc)">
+      <Icon name="lucide:x" aria-hidden="true" />
+    </button>
+  </header>
+
+  <div class="studio-body">
+    <p class="studio-privacy" data-privacy-note hidden>
+      Your browser sends Do Not Track or Global Privacy Control, so adapting is paused. You can still turn it on below or replay a profile.
+    </p>
+
+    <section class="studio-block" aria-labelledby="st-now">
+      <div class="studio-row">
+        <h3 id="st-now" class="label"><span class="c">Current shape</span></h3>
+        <div class="switch-wrap">
+          <span id="pause-label" class="switch-text">Pause adapting</span>
+          <button type="button" role="switch" class="switch" aria-checked="false" aria-labelledby="pause-label" data-pause><span></span></button>
+        </div>
+      </div>
+      <p class="studio-profile" data-current-profile>Default</p>
+    </section>
+
+    <section class="studio-block" aria-labelledby="st-signals">
+      <h3 id="st-signals" class="label"><span class="c">Live signals</span> / in memory only</h3>
+      <div class="meters" data-meters></div>
+    </section>
+
+    <section class="studio-block" aria-labelledby="st-scores">
+      <h3 id="st-scores" class="label"><span class="c">Profile scores</span> / leader needs +25 %</h3>
+      <div class="meters" data-scores></div>
+    </section>
+
+    <section class="studio-block" aria-labelledby="st-why">
+      <h3 id="st-why" class="label"><span class="c">Why this changed</span></h3>
+      <ul class="why" data-reasons aria-live="polite"></ul>
+    </section>
+
+    <section class="studio-block" aria-labelledby="st-replay">
+      <h3 id="st-replay" class="label"><span class="c">Replay as</span></h3>
+      <div class="replay">
+        <button type="button" class="btn btn-sm" data-replay="builder" aria-pressed="false">Builder</button>
+        <button type="button" class="btn btn-sm" data-replay="buyer" aria-pressed="false">Buyer</button>
+        <button type="button" class="btn btn-sm" data-replay="researcher" aria-pressed="false">Researcher</button>
+      </div>
+      <div class="btn-row studio-actions">
+        <button type="button" class="btn btn-sm btn-ghost" data-reset><Icon name="lucide:rotate-ccw" aria-hidden="true" />Reset to default</button>
+        <button type="button" class="btn btn-sm btn-primary" data-save-run><Icon name="lucide:save" aria-hidden="true" />Save this run</button>
+      </div>
+      <p class="save-status" data-save-status role="status" aria-live="polite"></p>
+      <a class="link studio-lib" href="/library">Open your library</a>
+    </section>
+
+    <section class="studio-block" aria-labelledby="st-vibe">
+      <h3 id="st-vibe" class="label"><span class="c">Vibe-coded variant</span> / plain English in</h3>
+      <VibeBox id="studio-vibe" compact />
+    </section>
+  </div>
+</aside>
+
+<style>
+  .studio-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: rgb(22 24 29 / 0.32);
+  }
+  .studio {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    width: min(440px, 100vw);
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-left: 1px solid var(--hairline);
+    transform: translateX(100%);
+    transition: transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .studio:global(.is-open) {
+    transform: none;
+  }
+  :global(html.studio-docked) .studio {
+    top: var(--nav-h);
+    z-index: 30;
+  }
+  @media (max-width: 640px) {
+    .studio {
+      top: auto;
+      left: 0;
+      width: 100%;
+      height: 88vh;
+      height: 88dvh;
+      border-left: 0;
+      border-top: 1px solid var(--hairline);
+      transform: translateY(100%);
+    }
+  }
+  .studio-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .studio-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .studio-brand p {
+    margin: 0;
+  }
+  .studio-title {
+    font-family: var(--f-head);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .studio-x {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .studio-x:hover {
+    border-color: var(--graphite);
+  }
+  .studio-x svg {
+    width: 20px;
+    height: 20px;
+  }
+  .studio-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 20px 32px;
+  }
+  .studio-privacy {
+    margin: 16px 0 0;
+    padding: 12px 14px;
+    border: 1px solid var(--cobalt);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .studio-block {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .studio-block:last-child {
+    border-bottom: 0;
+  }
+  .studio-block h3 {
+    margin-bottom: 12px;
+    font-size: 11px;
+  }
+  .studio-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .studio-row h3 {
+    margin: 0;
+  }
+  .studio-profile {
+    margin: 10px 0 0;
+    font-family: var(--f-head);
+    font-weight: 800;
+    font-size: 30px;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--cobalt);
+  }
+  .switch-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .switch-text {
+    font-size: 14px;
+  }
+  .switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border: 1px solid var(--graphite);
+    border-radius: 2px;
+    background: var(--white);
+    cursor: pointer;
+    padding: 0;
+  }
+  .switch span {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: var(--graphite);
+    transition: transform 0.2s ease;
+  }
+  .switch[aria-checked='true'] {
+    background: var(--cobalt);
+    border-color: var(--cobalt);
+  }
+  .switch[aria-checked='true'] span {
+    transform: translateX(20px);
+    background: var(--white);
+  }
+  .why {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .why :global(li) {
+    position: relative;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .why :global(li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 1px;
+    background: var(--cobalt);
+  }
+  .replay {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .replay .btn[aria-pressed='true'] {
+    background: var(--cobalt);
+    border-color: var(--cobalt);
+    color: var(--white);
+  }
+  .studio-actions {
+    margin-top: 12px;
+  }
+  .studio-actions .btn {
+    flex: 1;
+  }
+  .save-status {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--slate);
+  }
+  .save-status:empty {
+    display: none;
+  }
+  .studio-lib {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+</style>

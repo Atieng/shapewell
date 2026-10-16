@@ -1,0 +1,136 @@
+---
+import { EXAMPLES } from '../scripts/vibe';
+interface Props {
+  id: string;
+  compact?: boolean;
+}
+const { id, compact = false } = Astro.props;
+---
+
+<div class:list={['vibe', compact && 'vibe-compact']} data-vibe>
+  <form novalidate>
+    <label class="label" for={`${id}-input`}><span class="c">Describe a variant</span> / plain English</label>
+    <textarea
+      id={`${id}-input`}
+      class="textarea"
+      rows={compact ? 3 : 3}
+      placeholder="For people who look at pricing, show the price first…"
+      aria-describedby={`${id}-note`}></textarea>
+    <div class="vibe-chips" role="group" aria-label="Example prompts">
+      {EXAMPLES.map((e) => <button type="button" class="chip" data-example={e}>{e}</button>)}
+    </div>
+    <div class="vibe-actions">
+      <button type="submit" class="btn btn-primary btn-sm">Generate rule</button>
+      <p class="vibe-status" data-vibe-status role="status" aria-live="polite"></p>
+    </div>
+  </form>
+
+  <div class="rule" data-vibe-out hidden>
+    <div class="rule-head">
+      <span class="label label-sm"><span class="c">Generated rule</span> / <span data-rule-name></span></span>
+    </div>
+    <dl class="rule-body">
+      <div><dt class="mono">When</dt><dd data-rule-when></dd></div>
+      <div><dt class="mono">Show</dt><dd data-rule-show></dd></div>
+      <div><dt class="mono">Copy</dt><dd data-rule-copy></dd></div>
+      <div><dt class="mono">Button</dt><dd data-rule-button></dd></div>
+    </dl>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary btn-sm" data-vibe-preview>Preview on this page</button>
+      <button type="button" class="btn btn-sm" data-vibe-save>Save variant</button>
+    </div>
+    <p class="vibe-saved" data-vibe-saved role="status" aria-live="polite"></p>
+  </div>
+
+  <p class="vibe-note muted" id={`${id}-note`}>This demo uses preset examples. In the product, AI writes the rules from your description.</p>
+</div>
+
+<style>
+  .vibe form {
+    display: grid;
+    gap: 12px;
+  }
+  .vibe-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    text-align: left;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    padding: 8px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    cursor: pointer;
+    max-width: 100%;
+    transition: border-color 0.2s ease;
+  }
+  .chip:hover {
+    border-color: var(--graphite);
+  }
+  .vibe-compact .chip {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  .vibe-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .vibe-status,
+  .vibe-saved {
+    margin: 0;
+    font-size: 14px;
+    color: var(--slate);
+  }
+  .vibe-saved:empty {
+    display: none;
+  }
+  .rule {
+    margin-top: 16px;
+    border: 1px solid var(--graphite);
+    background: var(--white);
+    border-radius: 2px;
+  }
+  .rule-head {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .rule-body {
+    margin: 0;
+    padding: 4px 14px;
+  }
+  .rule-body > div {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .rule-body > div:last-child {
+    border-bottom: 0;
+  }
+  .rule-body dt {
+    color: var(--cobalt);
+    font-size: 11px;
+    padding-top: 3px;
+  }
+  .rule-body dd {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .rule .btn-row {
+    padding: 0 14px 14px;
+  }
+  .vibe-saved {
+    padding: 0 14px 14px;
+  }
+  .vibe-note {
+    font-size: 13px;
+    margin: 14px 0 0;
+  }
+</style>

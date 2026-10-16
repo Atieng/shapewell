@@ -1,0 +1,45 @@
+---
+interface Props {
+  size?: number;
+  wordmark?: boolean;
+  tone?: 'dark' | 'light';
+  href?: string | null;
+  class?: string;
+}
+const { size = 32, wordmark = true, tone = 'dark', href = '/', class: cls = '' } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag href={href ?? undefined} class:list={['logo', `logo-${tone}`, cls]} aria-label={href ? 'Shapewell home' : undefined}>
+  <svg viewBox="0 0 40 40" width={size} height={size} aria-hidden="true" focusable="false">
+    <rect width="40" height="40" rx="4" fill="#2F4BFF"></rect>
+    <path d="M12 8 L12 30 L17.5 25 L21.5 33.5 L25.5 31.7 L21.6 23.3 L29 23.3 Z" fill="#FFFFFF"></path>
+    <path data-swoosh d="M27 10 C33 13 34 20 30.5 25" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"></path>
+  </svg>
+  {wordmark && <span class="logo-word">Shapewell</span>}
+</Tag>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo svg {
+    flex-shrink: 0;
+  }
+  .logo-word {
+    font-family: var(--f-head);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--graphite);
+  }
+  .logo-light .logo-word {
+    color: var(--paper);
+  }
+</style>

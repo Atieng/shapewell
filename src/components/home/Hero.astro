@@ -1,0 +1,128 @@
+---
+import { Icon } from 'astro-icon/components';
+import Frame from '../Frame.astro';
+import hero1 from '../../assets/images/hero-1.jpg';
+import hero2 from '../../assets/images/hero-2.jpg';
+import hero3 from '../../assets/images/hero-3.jpg';
+import { SHAPES } from '../../scripts/reshape';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container grid-12 hero-grid">
+    <div class="hero-text">
+      <p class="label" data-hero-fade><span class="c">Built for the person reading</span> / not the average visitor</p>
+      <h1 id="hero-title" class="h-display" data-hero-h1>
+        Your website, shaped for <span class="accent">whoever is reading it.</span>
+      </h1>
+      <p class="lead hero-sub" data-hero-fade>
+        <span data-reshape="sub"><span data-swap-text>{SHAPES.default.sub}</span></span>
+        <span class="swap-line" aria-hidden="true"></span>
+      </p>
+      <div class="btn-row" data-hero-fade>
+        <button type="button" class="btn btn-primary" data-reshape="cta" data-action="studio">
+          <span data-swap-text>{SHAPES.default.cta}</span>
+          <Icon name="lucide:arrow-right" aria-hidden="true" />
+        </button>
+        <a class="btn" href="/sample">Explore a sample</a>
+      </div>
+      <p class="hero-extra muted" data-hero-fade>
+        This page is the demo. Read it the way you normally would, then press <span class="kbd">K</span> to see what it noticed.
+      </p>
+    </div>
+
+    <div class="hero-collage">
+      <Frame
+        src={hero1}
+        alt="A person reading on a laptop at a wooden desk"
+        caption="Fig. 01 - Reading on a laptop"
+        ratio="4 / 3"
+        class="c-1"
+        eager
+        hero
+        sizes="(max-width: 900px) 100vw, 560px"
+      />
+      <Frame
+        src={hero2}
+        alt="A hand holding a phone and scrolling"
+        caption="Fig. 02 - Phone in hand"
+        ratio="1 / 1"
+        class="c-2"
+        eager
+        hero
+        widths={[300, 500, 700]}
+        sizes="(max-width: 900px) 50vw, 270px"
+      />
+      <Frame
+        src={hero3}
+        alt="A small team gathered around a laptop screen"
+        caption="Fig. 03 - A small team at a screen"
+        ratio="1 / 1"
+        class="c-3"
+        eager
+        hero
+        widths={[300, 500, 700]}
+        sizes="(max-width: 900px) 50vw, 270px"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-block: 48px 72px;
+    overflow-x: clip;
+  }
+  .hero-grid {
+    align-items: center;
+    row-gap: 48px;
+  }
+  .hero-text {
+    grid-column: 1 / span 6;
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+  .hero-text h1 {
+    max-width: 13ch;
+  }
+  .hero-sub {
+    margin: 0;
+    min-height: 3.2em;
+    max-width: 46ch;
+  }
+  .hero-extra {
+    margin: 0;
+    font-size: 14px;
+  }
+  .hero-collage {
+    grid-column: 8 / span 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .hero-collage :global(.c-1) {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 900px) {
+    .hero-text,
+    .hero-collage {
+      grid-column: 1 / -1;
+    }
+    .hero {
+      min-height: 0;
+      padding-top: 32px;
+    }
+  }
+  @media (max-width: 400px) {
+    .hero-collage {
+      gap: 10px;
+    }
+    .hero-collage :global(figcaption) {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+  }
+</style>

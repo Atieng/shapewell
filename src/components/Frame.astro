@@ -1,0 +1,45 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  ratio?: string;
+  widths?: number[];
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+  hero?: boolean;
+  slide?: 'left' | 'right' | 'up';
+}
+const {
+  src,
+  alt,
+  caption,
+  ratio = '4 / 3',
+  widths = [400, 640, 900, 1200],
+  sizes = '(max-width: 640px) 100vw, 50vw',
+  eager = false,
+  class: cls = '',
+  hero = false,
+  slide,
+} = Astro.props;
+---
+
+<figure class:list={['frame', cls]} data-hero-frame={hero ? '' : undefined} data-slide={slide}>
+  <div class="frame-media" style={`aspect-ratio: ${ratio}`}>
+    <Picture
+      src={src}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      formats={['avif', 'webp']}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      decoding={eager ? 'sync' : 'async'}
+    />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

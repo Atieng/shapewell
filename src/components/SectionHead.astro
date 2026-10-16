@@ -1,0 +1,13 @@
+---
+// Hairline + mono index label. The number is filled in by position on the page.
+interface Props {
+  name: string;
+  n?: number;
+  class?: string;
+}
+const { name, n = 1, class: cls = '' } = Astro.props;
+---
+
+<div class:list={['section-head', cls]}>
+  <span class="label" data-index data-type><span class="c">{String(n).padStart(2, '0')}</span> / {name}</span>
+</div>

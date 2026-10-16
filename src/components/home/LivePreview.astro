@@ -1,0 +1,72 @@
+---
+import SectionHead from '../SectionHead.astro';
+---
+
+<section class="section" id="live" aria-labelledby="live-title">
+  <div class="container">
+    <SectionHead name="Live preview" />
+    <div class="live card" data-signal="explain" data-slide="up">
+      <div class="live-left">
+        <h2 id="live-title" class="h-section">What we've <span class="accent">noticed so far.</span></h2>
+        <p class="label label-sm"><span class="c">Observes.</span> Never stores.</p>
+        <p>
+          These numbers are measured right now, in this tab, from how you read this page. Nothing is sent anywhere. Close
+          the tab and they are gone.
+        </p>
+        <div class="live-now">
+          <span class="label label-sm">Current profile</span>
+          <strong data-current-profile>Default</strong>
+          <span class="label label-sm"><span class="c" data-engine-status>Watching</span></span>
+        </div>
+        <button type="button" class="btn btn-primary" data-open-studio aria-controls="studio" aria-expanded="false">
+          Open studio <span class="kbd" aria-hidden="true">K</span>
+        </button>
+      </div>
+      <div class="live-right">
+        <div class="meters" data-meters aria-live="off">
+          <noscript><p>Turn on JavaScript to see live signals. The page still works without it.</p></noscript>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .live {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding: 40px;
+  }
+  .live-left {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    justify-items: start;
+  }
+  .live-left p {
+    margin: 0;
+  }
+  .live-now {
+    display: grid;
+    gap: 6px;
+    padding: 16px 0;
+    border-block: 1px solid var(--hairline);
+    width: 100%;
+  }
+  .live-now strong {
+    font-family: var(--f-head);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--cobalt);
+  }
+  @media (max-width: 860px) {
+    .live {
+      grid-template-columns: 1fr;
+      padding: 24px;
+      gap: 32px;
+    }
+  }
+</style>

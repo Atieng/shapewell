@@ -1,0 +1,60 @@
+---
+import SectionHead from '../SectionHead.astro';
+import VibeBox from '../VibeBox.astro';
+---
+
+<section class="section" id="variants" aria-labelledby="vibe-title" data-signal="explain">
+  <div class="container grid-12 vibe-grid">
+    <div class="vibe-text" data-slide="left">
+      <SectionHead name="Variants" />
+      <p class="label"><span class="c">Plain English in</span> / page variant out</p>
+      <h2 id="vibe-title" class="h-section">Describe it. <span class="accent">Shapewell builds it.</span></h2>
+      <div class="collapsible">
+        <p class="clip">
+          Tell Shapewell who you're designing for in a sentence. It turns that into a rule and a layout, and you can preview
+          it right here.
+        </p>
+        <button type="button" class="more-btn" aria-expanded="false">Read more</button>
+      </div>
+    </div>
+    <div class="vibe-panel frame" data-slide="right">
+      <div class="vibe-inner">
+        <VibeBox id="home-vibe" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vibe-grid {
+    align-items: start;
+    row-gap: 40px;
+  }
+  .vibe-text {
+    grid-column: 1 / span 5;
+    display: grid;
+    gap: 20px;
+  }
+  .vibe-text .section-head {
+    margin-bottom: 0;
+  }
+  .collapsible p {
+    margin: 0;
+  }
+  .vibe-panel {
+    grid-column: 7 / span 6;
+  }
+  .vibe-inner {
+    border: 1px solid var(--hairline);
+    padding: 22px;
+  }
+  @media (max-width: 900px) {
+    .vibe-text,
+    .vibe-panel {
+      grid-column: 1 / -1;
+    }
+    .vibe-inner {
+      padding: 16px;
+    }
+  }
+</style>

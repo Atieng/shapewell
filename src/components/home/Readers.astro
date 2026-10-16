@@ -1,0 +1,84 @@
+---
+import Frame from '../Frame.astro';
+import SectionHead from '../SectionHead.astro';
+import r1 from '../../assets/images/reader-1.jpg';
+import r2 from '../../assets/images/reader-2.jpg';
+import r3 from '../../assets/images/reader-3.jpg';
+
+const readers = [
+  { key: 'builder', name: 'Builder', line: 'Wants the code, fast.', img: r1, alt: 'Two developers working at desks with large monitors', slide: 'left' },
+  { key: 'buyer', name: 'Buyer', line: 'Wants the price, clearly.', img: r2, alt: 'A smiling woman with curly hair in a bright office', slide: 'up' },
+  { key: 'researcher', name: 'Researcher', line: 'Wants to understand it first.', img: r3, alt: 'A man with glasses thinking, chin resting on his hand', slide: 'right' },
+] as const;
+---
+
+<section class="section" id="readers" aria-labelledby="readers-title">
+  <div class="container">
+    <SectionHead name="Who's reading" />
+    <h2 id="readers-title" class="h-section">Three people. <span class="accent">One page.</span></h2>
+    <ul class="readers">
+      {
+        readers.map((r) => (
+          <li class="reader" data-reader={r.key} data-slide={r.slide}>
+            <span class="you mono">This is you</span>
+            <Frame src={r.img} alt={r.alt} ratio="4 / 5" sizes="(max-width: 760px) 100vw, 380px" widths={[360, 560, 760]} />
+            <div class="reader-text">
+              <span class="label"><span class="c">{r.name}</span></span>
+              <p>{r.line}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .h-section {
+    margin-bottom: 40px;
+  }
+  .readers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .reader {
+    position: relative;
+    border-top: 3px solid transparent;
+    padding-top: 12px;
+    transition: border-color 0.3s ease;
+  }
+  .reader.is-you {
+    border-top-color: var(--cobalt);
+  }
+  .you {
+    position: absolute;
+    top: 22px;
+    left: 10px;
+    z-index: 2;
+    background: var(--cobalt);
+    color: var(--white);
+    font-size: 11px;
+    padding: 4px 8px;
+    visibility: hidden;
+  }
+  .reader.is-you .you {
+    visibility: visible;
+  }
+  .reader-text {
+    padding-top: 14px;
+  }
+  .reader-text p {
+    margin: 6px 0 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  @media (max-width: 760px) {
+    .readers {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

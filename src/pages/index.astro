@@ -1,16 +1,29 @@
 ---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import BuiltWith from '../components/home/BuiltWith.astro';
+import LivePreview from '../components/home/LivePreview.astro';
+import Readers from '../components/home/Readers.astro';
+import Workflow from '../components/home/Workflow.astro';
+import Feature from '../components/home/Feature.astro';
+import Vibe from '../components/home/Vibe.astro';
+import UseCases from '../components/home/UseCases.astro';
+import Install from '../components/home/Install.astro';
+import PricingPreview from '../components/home/PricingPreview.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+  title="Shapewell: your website, shaped for whoever is reading it"
+  description="Shapewell reads how each visitor moves through your page and reshapes it for them, in the browser. No cookies, no personal data. Try the live demo.">
+  <Hero />
+  <BuiltWith />
+  <LivePreview />
+  <Readers />
+  <Workflow />
+  <div data-reorder>
+    <div data-key="pricing-preview" data-order="0" data-first-for="buyer"><PricingPreview /></div>
+    <div data-key="explain" data-order="1" data-first-for="researcher"><Feature /><Vibe /></div>
+    <div data-key="usecases" data-order="2"><UseCases /></div>
+    <div data-key="install" data-order="3" data-first-for="builder"><Install /></div>
+  </div>
+</Base>

@@ -1,0 +1,68 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden>
+  <span class="toast-dot" aria-hidden="true"></span>
+  <p data-toast-text></p>
+  <button type="button" class="btn btn-sm btn-primary" data-toast-why>See why</button>
+  <button type="button" class="toast-x" data-toast-close aria-label="Dismiss"><Icon name="lucide:x" aria-hidden="true" /></button>
+</div>
+
+<style>
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(560px, calc(100vw - 32px));
+    padding: 10px 10px 10px 16px;
+    background: var(--graphite);
+    color: var(--paper);
+    border-radius: 2px;
+    transform: translate(-50%, 16px);
+    opacity: 0;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
+  .toast:global(.is-on) {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  .toast p {
+    margin: 0;
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .toast-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--cobalt);
+    flex-shrink: 0;
+  }
+  .toast-x {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 0;
+    color: var(--paper);
+    cursor: pointer;
+  }
+  .toast-x svg {
+    width: 18px;
+    height: 18px;
+  }
+  @media (max-width: 760px) {
+    .toast {
+      bottom: 74px;
+    }
+  }
+</style>

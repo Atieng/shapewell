@@ -1,0 +1,85 @@
+---
+import { Icon } from 'astro-icon/components';
+const path = Astro.url.pathname;
+const home = path === '/';
+---
+
+<nav class="bottom-bar" aria-label="Quick">
+  <a href="/" aria-current={home ? 'page' : undefined}><Icon name="lucide:house" aria-hidden="true" /><span>Home</span></a>
+  <button type="button" data-open-studio aria-controls="studio" aria-expanded="false"><Icon name="lucide:sliders-horizontal" aria-hidden="true" /><span>Studio</span></button>
+  <a href="/library" aria-current={path.startsWith('/library') ? 'page' : undefined}><Icon name="lucide:library" aria-hidden="true" /><span>Library</span></a>
+  <a href={home ? '#pricing' : '/#pricing'}><Icon name="lucide:tag" aria-hidden="true" /><span>Pricing</span></a>
+</nav>
+<div class="sticky-cta" aria-hidden="false">
+  <button type="button" class="btn btn-primary" data-reshape="cta" data-action="pricing"><span data-swap-text>Start free</span></button>
+</div>
+
+<style>
+  .bottom-bar {
+    display: none;
+  }
+  .sticky-cta {
+    display: none;
+  }
+  @media (max-width: 760px) {
+    .bottom-bar {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 45;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--white);
+      border-top: 1px solid var(--hairline);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .bottom-bar a,
+    .bottom-bar button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      min-height: 58px;
+      background: none;
+      border: 0;
+      text-decoration: none;
+      font-family: var(--f-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      cursor: pointer;
+    }
+    .bottom-bar svg {
+      width: 20px;
+      height: 20px;
+    }
+    .bottom-bar [aria-current='page'] {
+      color: var(--cobalt);
+    }
+    :global(body) {
+      padding-bottom: 58px;
+    }
+    :global(html[data-shape='mobile']) .sticky-cta {
+      display: block;
+      position: fixed;
+      inset: auto 0 58px 0;
+      z-index: 44;
+      padding: 10px 16px;
+      background: var(--paper);
+      border-top: 1px solid var(--hairline);
+    }
+    .sticky-cta .btn {
+      width: 100%;
+    }
+  }
+  @media (min-width: 761px) {
+    :global(html[data-shape='mobile']) .sticky-cta {
+      display: block;
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 44;
+    }
+  }
+</style>

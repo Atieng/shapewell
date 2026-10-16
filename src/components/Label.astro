@@ -1,0 +1,13 @@
+---
+// Split-colour mono label: first phrase cobalt, the rest slate.
+interface Props {
+  first: string;
+  rest?: string;
+  sep?: string;
+  class?: string;
+  type?: boolean;
+}
+const { first, rest, sep = ' / ', class: cls = '', type = true } = Astro.props;
+---
+
+<span class:list={['label', cls]} data-type={type ? '' : undefined}><span class="c">{first}</span>{rest && <>{sep}{rest}</>}</span>
